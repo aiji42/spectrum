@@ -1,8 +1,12 @@
 {
-  "extends": ["next", "next/core-web-vitals", "eslint:recommended",
+  "extends": [
+    "next",
+    "next/core-web-vitals",
+    "eslint:recommended",
     "plugin:@typescript-eslint/recommended",
     "plugin:react/recommended",
-    "prettier"],
+    "prettier"
+  ],
   "rules": {
     "react/prop-types": "off",
     "react/react-in-jsx-scope": "off"
