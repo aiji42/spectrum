@@ -1,11 +1,10 @@
 import Head from 'next/head'
 import Image from 'next/image'
 import styles from '@/styles/Home.module.css'
-import useSWR from 'swr'
-import { useTeams } from '@/hooks/use-teams'
 import { useProjects } from '@/hooks/use-projects'
+import {VFC} from "react";
 
-export default function Home() {
+const Home: VFC = () => {
   const data = useProjects('team_4bnkeXnIhCPCgvnJg7VLYjPU')
 
   console.log(data)
@@ -74,3 +73,5 @@ export default function Home() {
     </div>
   )
 }
+
+export default Home
