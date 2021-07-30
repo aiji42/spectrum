@@ -11,13 +11,16 @@ type Projects = {
   projects: Project[]
 }
 
-export const useProjects = (teamId?: string) => {
+export const useProjects = (teamId?: string): Projects | undefined => {
   const { data } = useSWR<Projects>(getProjectsUrl(teamId))
 
   return data
 }
 
-export const useProject = (id: string, teamId?: string) => {
+export const useProject = (
+  id: string,
+  teamId?: string
+): Project | undefined => {
   const { data } = useSWR<Project>(getProjectUrl(id, teamId))
 
   return data

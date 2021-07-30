@@ -12,7 +12,7 @@ type Teams = {
   teams: Team[]
 }
 
-export const useTeams = () => {
+export const useTeams = (): Teams | undefined => {
   const { data } = useSWR<Teams>(URL)
 
   return data

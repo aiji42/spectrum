@@ -1,13 +1,21 @@
 import Head from 'next/head'
 import Image from 'next/image'
 import styles from '@/styles/Home.module.css'
-import { useProjects } from '@/hooks/use-projects'
 import { VFC } from 'react'
+import { useDeployment, useDeployments } from '@/hooks/use-deployments'
 
 const Home: VFC = () => {
-  const data = useProjects('team_4bnkeXnIhCPCgvnJg7VLYjPU')
+  const dataDeployments = useDeployments(
+    'prj_KT2xM6K1UegBVslm5rOLuffuwxqy',
+    'team_4bnkeXnIhCPCgvnJg7VLYjPU'
+  )
+  const dataDeployment = useDeployment(
+    'dpl_6vVk1cUyvDPXVBPq1NFiffCBW1Rp',
+    'team_4bnkeXnIhCPCgvnJg7VLYjPU'
+  )
 
-  console.log(data)
+  console.log(dataDeployments)
+  console.log(dataDeployment)
 
   return (
     <div className={styles.container}>
