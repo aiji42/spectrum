@@ -1,8 +1,15 @@
 import Head from 'next/head'
 import Image from 'next/image'
 import styles from '../../styles/Home.module.css'
+import useSWR from 'swr'
+import { useTeams } from '../hooks/use-teams'
+import { useProjects } from '../hooks/use-projects'
 
 export default function Home() {
+  const data = useProjects('team_4bnkeXnIhCPCgvnJg7VLYjPU')
+
+  console.log(data)
+
   return (
     <div className={styles.container}>
       <Head>
