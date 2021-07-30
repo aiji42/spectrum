@@ -2,7 +2,7 @@ import Head from 'next/head'
 import Image from 'next/image'
 import styles from '@/styles/Home.module.css'
 import { useProjects } from '@/hooks/use-projects'
-import {VFC} from "react";
+import { VFC } from 'react'
 
 const Home: VFC = () => {
   const data = useProjects('team_4bnkeXnIhCPCgvnJg7VLYjPU')

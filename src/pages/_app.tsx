@@ -1,6 +1,7 @@
 import '@/styles/globals.css'
 import type { AppProps } from 'next/app'
 import { SWRConfig } from 'swr'
+import { VFC } from 'react'
 
 const fetcher = (url: string) =>
   fetch(url, {
@@ -9,7 +10,7 @@ const fetcher = (url: string) =>
     }
   }).then((res) => res.json())
 
-function MyApp({ Component, pageProps }: AppProps) {
+const MyApp: VFC<AppProps> = ({ Component, pageProps }) => {
   return (
     <SWRConfig
       value={{
