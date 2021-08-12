@@ -5,6 +5,16 @@ const URL = 'https://api.vercel.com/v13/projects/'
 type Project = {
   id: string
   name: string
+  targets: {
+    production: {
+      alias: string[]
+      deploymentHostname: string
+      meta: Record<string, string>
+      name: string
+      readyState: 'QUEUED' | 'BUILDING' | 'READY' | 'ERROR'
+      createdAt: number
+    }
+  }
 }
 
 type Projects = {
