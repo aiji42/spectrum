@@ -7,9 +7,11 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint src/**/*.{ts,tsx}",
-    "format": "yarn prettier src/**/*.{ts,tsx} --write"
+    "format": "prettier 'src/**/*.{ts,tsx}' --write"
   },
   "dependencies": {
+    "@headlessui/react": "^1.4.0",
+    "@heroicons/react": "^1.0.3",
     "next": "11.0.1",
     "react": "17.0.2",
     "react-dom": "17.0.2",
@@ -18,10 +20,13 @@
   "devDependencies": {
     "@types/react": "17.0.15",
     "@typescript-eslint/eslint-plugin": "^4.28.5",
+    "autoprefixer": "^10.3.1",
     "eslint": "7.31.0",
     "eslint-config-next": "11.0.1",
     "eslint-config-prettier": "^8.3.0",
+    "postcss": "^8.3.6",
     "prettier": "^2.3.2",
+    "tailwindcss": "^2.2.7",
     "typescript": "4.3.5"
   }
 }

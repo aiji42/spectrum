@@ -2,7 +2,7 @@ import useSWR from 'swr'
 
 const URL = 'https://api.vercel.com/v13/projects/'
 
-type Project = {
+export type Project = {
   id: string
   name: string
   targets: {
@@ -11,13 +11,21 @@ type Project = {
       deploymentHostname: string
       meta: Record<string, string>
       name: string
-      readyState: 'QUEUED' | 'BUILDING' | 'READY' | 'ERROR'
+      readyState: 'QUEUED' | 'CANCELED' | 'BUILDING' | 'READY' | 'ERROR'
       createdAt: number
     }
   }
+  link: {
+    deployHooks: Array<{
+      id: string
+      name: string
+      ref: string
+      url: string
+    }>
+  }
 }
 
-type Projects = {
+export type Projects = {
   projects: Project[]
 }
 

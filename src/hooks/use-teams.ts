@@ -2,13 +2,13 @@ import useSWR from 'swr'
 
 const URL = 'https://api.vercel.com/v13/teams'
 
-type Team = {
+export type Team = {
   id: string
   slug: string
   name: string
 }
 
-type Teams = {
+export type Teams = {
   teams: Team[]
 }
 
