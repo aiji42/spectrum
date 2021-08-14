@@ -2,6 +2,7 @@ import { Fragment, VFC } from 'react'
 import { Popover, Transition } from '@headlessui/react'
 import { ChevronDownIcon } from '@heroicons/react/solid'
 import Link from 'next/link'
+import Image from 'next/image'
 import {
   LightningBoltIcon,
   UserIcon,
@@ -31,16 +32,18 @@ export const Header: VFC<Props> = ({
   teams
 }) => {
   return (
-    <div className="flex items-center border-b-2 border-gray-100 py-6 justify-start space-x-10">
+    <div className="flex items-center border-b-2 border-gray-100 py-4 justify-start space-x-10">
       <div className="flex justify-start lg:w-0 lg:flex-1">
-        <a href="#">
-          <span className="sr-only">Workflow</span>
-          <img
-            className="h-8 w-auto"
-            src="https://tailwindui.com/img/logos/workflow-mark-indigo-600.svg"
-            alt=""
+        <div className="h-10 w-auto">
+          <Image
+            src="/prism.svg"
+            alt="logo"
+            height={44}
+            width={61}
+            quality={100}
+            priority
           />
-        </a>
+        </div>
       </div>
       <Popover.Group as="nav" className="flex space-x-10">
         <Popover className="relative">
