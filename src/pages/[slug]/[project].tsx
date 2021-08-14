@@ -1,7 +1,6 @@
 import { VFC } from 'react'
 import { Team, Teams } from '@/hooks/use-teams'
 import { Project } from '@/hooks/use-projects'
-
 import { Popover } from '@headlessui/react'
 import { User } from '@/hooks/use-user'
 import { GetServerSideProps } from 'next'
@@ -90,7 +89,6 @@ const Home: VFC<Props> = (props) => {
           <div className="mt-8">
             <ProjectCard {...props} />
           </div>
-
           <div className="mt-8">
             <SplitTestsCard {...props} />
           </div>
