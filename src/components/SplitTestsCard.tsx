@@ -1,49 +1,29 @@
 import { StopIcon, PlusCircleIcon } from '@heroicons/react/solid'
-import { useCallback, useEffect, useReducer, VFC } from 'react'
+import { useCallback, useEffect, useMemo, useReducer, VFC } from 'react'
 import { Project } from '@/hooks/use-projects'
 import { Fragment, useState } from 'react'
 import { Dialog, Transition } from '@headlessui/react'
 import equal from 'fast-deep-equal'
 import { SplitForm } from '@/components/SpritForm'
+import { useRouter } from 'next/router'
+import { User } from '@/hooks/use-user'
+import { Team } from '@/hooks/use-teams'
+import nprogress from 'nprogress'
 
-export const splits: Record<
+export type Splits = Record<
   string,
   {
     path: string
     hosts: Record<string, { host: string; weight: number }>
     cookie: { maxAge: number }
   }
-> = {
-  example1: {
-    path: '/ohaka/pref-:pref(\\w+)/link',
-    hosts: {
-      original: { host: 'example.com', weight: 1 },
-      challenger: {
-        host: 'challenger-for-example1.vercel.app',
-        weight: 1
-      }
-    },
-    cookie: {
-      maxAge: 60 * 60 * 12
-    }
-  },
-  example2: {
-    path: '/bar/:path*',
-    hosts: {
-      original: { host: 'example.com', weight: 1 },
-      challenger: {
-        host: 'challenger-for-example2.vercel.app',
-        weight: 1
-      }
-    },
-    cookie: {
-      maxAge: 60 * 60 * 12
-    }
-  }
-}
+>
 
 type Props = {
   project: Project
+  slug: string
+  user: User['user']
+  teams: Team[]
 }
 
 export type SplitFormAction =
@@ -51,14 +31,18 @@ export type SplitFormAction =
       type: 'UPDATE' | 'CREATE'
       key: string
       newKey: string
-      data: typeof splits[string]
+      data: Splits[string]
     }
   | {
       type: 'DELETE'
       key: string
     }
+  | {
+      type: 'RELOAD'
+      data: Splits
+    }
 
-const reducer = (state: typeof splits, action: SplitFormAction) => {
+const reducer = (state: Splits, action: SplitFormAction) => {
   const newState = { ...state }
   if (action.type === 'DELETE') {
     delete newState[action.key]
@@ -69,13 +53,23 @@ const reducer = (state: typeof splits, action: SplitFormAction) => {
     newState[action.newKey] = action.data
     return newState
   }
+  if (action.type === 'RELOAD') return action.data
 
   newState[action.newKey] = action.data
   return newState
 }
 
-export const SplitTestsCard: VFC<Props> = ({ project }) => {
-  const [currentSplits, dispatch] = useReducer(reducer, splits)
+const getSplitEnv = (project: Project): Project['env'][number] | undefined =>
+  project.env.find(({ key }) => key === 'SPLIT_CONFIG_BY_SPECTRUM')
+const runningSplitTests = (project: Project) =>
+  project.env.find(({ key }) => key === 'SPLIT_CONFIG_BY_SPECTRUM')
+
+export const SplitTestsCard: VFC<Props> = ({ project, teams, slug }) => {
+  const originalSplits = useMemo(
+    () => JSON.parse(getSplitEnv(project)?.value ?? '{}'),
+    [project]
+  )
+  const [currentSplits, dispatch] = useReducer(reducer, originalSplits)
   const [editingKey, setEditingKey] = useState<string | null>(null)
   const handleClose = useCallback(() => setEditingKey(null), [])
   const handleCreate = useCallback(() => setEditingKey(''), [])
@@ -83,6 +77,27 @@ export const SplitTestsCard: VFC<Props> = ({ project }) => {
   useEffect(() => {
     handleClose()
   }, [currentSplits, handleClose])
+  const router = useRouter()
+  useEffect(() => {
+    dispatch({ type: 'RELOAD', data: originalSplits })
+  }, [originalSplits])
+  const teamId = teams.find((team) => team.slug === slug)?.id ?? null
+  const handleDeploy = useCallback(() => {
+    fetch('/api/update-split', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        projectId: project.id,
+        teamId,
+        envId: getSplitEnv(project)?.id,
+        splits: currentSplits
+      })
+    }).finally(() => {
+      router.reload()
+    })
+  }, [currentSplits, project, router, teamId])
 
   return (
     <div className="shadow sm:rounded-lg">
@@ -90,11 +105,12 @@ export const SplitTestsCard: VFC<Props> = ({ project }) => {
         <div className="flex-1 min-w-0">
           <h3 className="text-white text-xl sm:truncate">Split Tests</h3>
         </div>
-        {!equal(currentSplits, splits) && (
+        {!equal(currentSplits, originalSplits) && (
           <span className="ml-3">
             <button
               type="button"
               className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+              onClick={handleDeploy}
             >
               <StopIcon className="-ml-1 mr-2 h-5 w-5" aria-hidden="true" />
               Deploy

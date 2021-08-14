@@ -23,6 +23,15 @@ export type Project = {
       url: string
     }>
   }
+  env: Array<{
+    type: string
+    value: string
+    target: string[]
+    id: string
+    key: string
+    createdAt: number
+    updatedAt: number
+  }>
 }
 
 export type Projects = {
