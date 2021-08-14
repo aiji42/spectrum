@@ -1,6 +1,9 @@
 import { Fragment, VFC } from 'react'
 import { Popover, Transition } from '@headlessui/react'
-import { ChevronDownIcon } from '@heroicons/react/solid'
+import {
+  ChevronDownIcon,
+  LightningBoltIcon as LightningBoltIconSolid
+} from '@heroicons/react/solid'
 import Link from 'next/link'
 import Image from 'next/image'
 import {
@@ -11,6 +14,7 @@ import {
 import { Project } from '@/hooks/use-projects'
 import { User } from '@/hooks/use-user'
 import { Team } from '@/hooks/use-teams'
+import { runningSplitTests } from '@/components/SplitTestsCard'
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(' ')
@@ -161,10 +165,18 @@ export const Header: VFC<Props> = ({
                             className="-m-3 p-3 flex items-start rounded-lg hover:bg-gray-50"
                             onClick={() => close()}
                           >
-                            <LightningBoltIcon
-                              className="flex-shrink-0 h-6 w-6 text-indigo-600"
-                              aria-hidden="true"
-                            />
+                            {runningSplitTests(project) ? (
+                              <LightningBoltIconSolid
+                                className="flex-shrink-0 h-6 w-6 text-indigo-600"
+                                aria-hidden="true"
+                              />
+                            ) : (
+                              <LightningBoltIcon
+                                className="flex-shrink-0 h-6 w-6 text-indigo-600"
+                                aria-hidden="true"
+                              />
+                            )}
+
                             <div className="ml-4">
                               <p className="text-base font-medium text-gray-900">
                                 {project.name}

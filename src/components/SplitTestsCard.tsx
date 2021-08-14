@@ -8,7 +8,6 @@ import { SplitForm } from '@/components/SpritForm'
 import { useRouter } from 'next/router'
 import { User } from '@/hooks/use-user'
 import { Team } from '@/hooks/use-teams'
-import nprogress from 'nprogress'
 
 export type Splits = Record<
   string,
@@ -61,8 +60,8 @@ const reducer = (state: Splits, action: SplitFormAction) => {
 
 const getSplitEnv = (project: Project): Project['env'][number] | undefined =>
   project.env.find(({ key }) => key === 'SPLIT_CONFIG_BY_SPECTRUM')
-const runningSplitTests = (project: Project) =>
-  project.env.find(({ key }) => key === 'SPLIT_CONFIG_BY_SPECTRUM')
+export const runningSplitTests = (project: Project) =>
+  Object.keys(JSON.parse(getSplitEnv(project)?.value ?? '{}')).length > 0
 
 export const SplitTestsCard: VFC<Props> = ({ project, teams, slug }) => {
   const originalSplits = useMemo(

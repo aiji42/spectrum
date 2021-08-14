@@ -5,7 +5,7 @@ import { Project } from '@/hooks/use-projects'
 import { Popover } from '@headlessui/react'
 import { User } from '@/hooks/use-user'
 import { GetServerSideProps } from 'next'
-import { Header } from '@/components/header'
+import { Header } from '@/components/Header'
 
 export const getServerSideProps: GetServerSideProps = async ({ query }) => {
   const { user } = await fetch('https://api.vercel.com/www/user', {
