@@ -3,7 +3,7 @@ import { Project, Splits, Team } from '@/types'
 
 export const deploySplitTest = (
   project: Project,
-  team: Team | undefined,
+  team: Team | undefined | null,
   splits: Splits
 ): ReturnType<typeof fetch> => {
   return fetch('/api/update-split', {
