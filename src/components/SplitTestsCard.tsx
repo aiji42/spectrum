@@ -5,17 +5,9 @@ import { Dialog, Transition } from '@headlessui/react'
 import equal from 'fast-deep-equal'
 import { SplitForm } from '@/components/SpritForm'
 import { useRouter } from 'next/router'
-import { Project, Teams, User } from '@/types'
+import { Project, SplitFormAction, Splits, Teams, User } from '@/types'
 import { getSplitEnvFromProject } from '@/utils'
-
-export type Splits = Record<
-  string,
-  {
-    path: string
-    hosts: Record<string, { host: string; weight: number }>
-    cookie: { maxAge: number }
-  }
->
+import { deploySplitTest } from '@/lib/client-side'
 
 type Props = {
   project: Project
@@ -23,22 +15,6 @@ type Props = {
   user: User
   teams: Teams
 }
-
-export type SplitFormAction =
-  | {
-      type: 'UPDATE' | 'CREATE'
-      key: string
-      newKey: string
-      data: Splits[string]
-    }
-  | {
-      type: 'DELETE'
-      key: string
-    }
-  | {
-      type: 'RELOAD'
-      data: Splits
-    }
 
 const reducer = (state: Splits, action: SplitFormAction) => {
   const newState = { ...state }
@@ -76,18 +52,7 @@ export const SplitTestsCard: VFC<Props> = ({ project, teams, slug }) => {
   }, [originalSplits])
   const teamId = teams.find((team) => team.slug === slug)?.id ?? null
   const handleDeploy = useCallback(() => {
-    fetch('/api/update-split', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        projectId: project.id,
-        teamId,
-        envId: getSplitEnvFromProject(project)?.id,
-        splits: currentSplits
-      })
-    }).finally(() => {
+    deploySplitTest(project, teamId, currentSplits).finally(() => {
       router.reload()
     })
   }, [currentSplits, project, router, teamId])

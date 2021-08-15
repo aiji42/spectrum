@@ -44,3 +44,28 @@ export type Project = {
 }
 
 export type Projects = Project[]
+
+export type Splits = Record<
+  string,
+  {
+    path: string
+    hosts: Record<string, { host: string; weight: number }>
+    cookie: { maxAge: number }
+  }
+>
+
+export type SplitFormAction =
+  | {
+      type: 'UPDATE' | 'CREATE'
+      key: string
+      newKey: string
+      data: Splits[string]
+    }
+  | {
+      type: 'DELETE'
+      key: string
+    }
+  | {
+      type: 'RELOAD'
+      data: Splits
+    }

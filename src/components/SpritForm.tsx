@@ -1,7 +1,7 @@
 import { Dispatch, useMemo, VFC } from 'react'
 import { Dialog } from '@headlessui/react'
-import { SplitFormAction, Splits } from '@/components/SplitTestsCard'
 import { useForm } from 'react-hook-form'
+import { Splits, SplitFormAction } from '@/types'
 
 type Props = {
   dispatch: Dispatch<SplitFormAction>
