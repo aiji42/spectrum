@@ -1,9 +1,9 @@
 import { getSplitEnvFromProject } from '@/utils'
-import { Project, Splits } from '@/types'
+import { Project, Splits, Team } from '@/types'
 
 export const deploySplitTest = (
   project: Project,
-  teamId: string | null,
+  team: Team | undefined,
   splits: Splits
 ): ReturnType<typeof fetch> => {
   return fetch('/api/update-split', {
@@ -13,7 +13,7 @@ export const deploySplitTest = (
     },
     body: JSON.stringify({
       projectId: project.id,
-      teamId,
+      teamId: team?.id,
       envId: getSplitEnvFromProject(project)?.id,
       splits
     })

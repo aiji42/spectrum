@@ -1,19 +1,17 @@
 import { StopIcon, PlusCircleIcon } from '@heroicons/react/solid'
-import { useCallback, useEffect, useMemo, useReducer, VFC } from 'react'
+import { useCallback, useEffect, useReducer, VFC } from 'react'
 import { Fragment, useState } from 'react'
 import { Dialog, Transition } from '@headlessui/react'
 import equal from 'fast-deep-equal'
 import { SplitForm } from '@/components/SpritForm'
 import { useRouter } from 'next/router'
-import { Project, SplitFormAction, Splits, Teams, User } from '@/types'
-import { getSplitEnvFromProject } from '@/utils'
+import { Project, SplitFormAction, Splits, Team } from '@/types'
 import { deploySplitTest } from '@/lib/client-side'
 
 type Props = {
   project: Project
-  slug: string
-  user: User
-  teams: Teams
+  team?: Team
+  splits: Splits
 }
 
 const reducer = (state: Splits, action: SplitFormAction) => {
@@ -33,29 +31,24 @@ const reducer = (state: Splits, action: SplitFormAction) => {
   return newState
 }
 
-export const SplitTestsCard: VFC<Props> = ({ project, teams, slug }) => {
-  const originalSplits = useMemo(
-    () => JSON.parse(getSplitEnvFromProject(project)?.value ?? '{}'),
-    [project]
-  )
-  const [currentSplits, dispatch] = useReducer(reducer, originalSplits)
+export const SplitTestsCard: VFC<Props> = ({ project, team, splits }) => {
+  const [currentSplits, dispatch] = useReducer(reducer, splits)
   const [editingKey, setEditingKey] = useState<string | null>(null)
   const handleClose = useCallback(() => setEditingKey(null), [])
   const handleCreate = useCallback(() => setEditingKey(''), [])
-  const isEditing = editingKey !== null
   useEffect(() => {
     handleClose()
   }, [currentSplits, handleClose])
   const router = useRouter()
   useEffect(() => {
-    dispatch({ type: 'RELOAD', data: originalSplits })
-  }, [originalSplits])
-  const teamId = teams.find((team) => team.slug === slug)?.id ?? null
+    dispatch({ type: 'RELOAD', data: splits })
+  }, [splits])
   const handleDeploy = useCallback(() => {
-    deploySplitTest(project, teamId, currentSplits).finally(() => {
+    deploySplitTest(project, team, currentSplits).finally(() => {
       router.reload()
     })
-  }, [currentSplits, project, router, teamId])
+  }, [currentSplits, project, router, team])
+  const isEditing = editingKey !== null
 
   return (
     <div className="shadow sm:rounded-lg">
@@ -63,7 +56,7 @@ export const SplitTestsCard: VFC<Props> = ({ project, teams, slug }) => {
         <div className="flex-1 min-w-0">
           <h3 className="text-white text-xl sm:truncate">Split Tests</h3>
         </div>
-        {!equal(currentSplits, originalSplits) && (
+        {!equal(currentSplits, splits) && (
           <span className="ml-3">
             <button
               type="button"
