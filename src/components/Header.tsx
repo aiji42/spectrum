@@ -11,10 +11,8 @@ import {
   UserIcon,
   UsersIcon
 } from '@heroicons/react/outline'
-import { Project } from '@/hooks/use-projects'
-import { User } from '@/hooks/use-user'
-import { Team } from '@/hooks/use-teams'
-import { runningSplitTests } from '@/components/SplitTestsCard'
+import { Project, Projects, Teams, User } from '@/types'
+import { isRunningSplitTests } from '@/utils'
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(' ')
@@ -23,9 +21,9 @@ function classNames(...classes: string[]) {
 type Props = {
   project?: Project
   slug?: string
-  user: User['user']
-  teams: Team[]
-  projects: Project[]
+  user: User
+  teams: Teams
+  projects: Projects
 }
 
 export const Header: VFC<Props> = ({
@@ -165,7 +163,7 @@ export const Header: VFC<Props> = ({
                             className="-m-3 p-3 flex items-start rounded-lg hover:bg-gray-50"
                             onClick={() => close()}
                           >
-                            {runningSplitTests(project) ? (
+                            {isRunningSplitTests(project) ? (
                               <LightningBoltIconSolid
                                 className="flex-shrink-0 h-6 w-6 text-indigo-600"
                                 aria-hidden="true"

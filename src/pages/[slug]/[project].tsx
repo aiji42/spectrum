@@ -1,30 +1,20 @@
 import { VFC } from 'react'
-import { Team, Teams } from '@/hooks/use-teams'
-import { Project } from '@/hooks/use-projects'
 import { Popover } from '@headlessui/react'
-import { User } from '@/hooks/use-user'
 import { GetServerSideProps } from 'next'
 import { Header } from '@/components/Header'
 import { ProjectCard } from '@/components/ProjectCard'
 import { SplitTestsCard } from '@/components/SplitTestsCard'
+import { fetchProjects, fetchUserAndTeams } from '@/lib/server-side'
+import { Project, Projects, Teams, User } from '@/types'
 
 export const getServerSideProps: GetServerSideProps = async ({ query }) => {
-  const fetchingUser = fetch('https://api.vercel.com/www/user', {
-    headers: {
-      Authorization: `Bearer ${process.env.NEXT_PUBLIC_VERCEL_API_TOKEN}`
-    }
-  }).then((res) => res.json())
+  const { user, teams } = await fetchUserAndTeams()
 
-  const fetchingTeams = fetch('https://api.vercel.com/v13/teams', {
-    headers: {
-      Authorization: `Bearer ${process.env.NEXT_PUBLIC_VERCEL_API_TOKEN}`
-    }
-  }).then((res) => res.json())
-
-  const { user } = await fetchingUser
-  const { teams }: Teams = await fetchingTeams
-
-  if (![user.username, ...teams.map(({ slug }) => slug)].includes(query.slug))
+  if (
+    ![user.username, ...teams.map(({ slug }) => slug)].includes(
+      query.slug as string
+    )
+  )
     return {
       redirect: {
         statusCode: 301,
@@ -32,34 +22,18 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
       }
     }
 
-  const projects: Project[] = await fetch(
-    'https://vercel.com/api/v2/projects/?slug=' + query.slug,
-    {
-      headers: {
-        Authorization: `Bearer ${process.env.NEXT_PUBLIC_VERCEL_API_TOKEN}`
-      }
-    }
-  ).then((res) => res.json())
+  const projects = await fetchProjects(query)
+  const project = projects.find(
+    ({ name }) => name === (query.project as string)
+  )
 
-  if (!projects.map(({ name }) => name).includes(query.project as string))
+  if (!project)
     return {
       redirect: {
         statusCode: 301,
         destination: `/${query.slug}`
       }
     }
-
-  const team = teams.find(({ slug }) => slug === query.slug)
-
-  const project: Project = await fetch(
-    `https://vercel.com/api/v2/projects/${query.project}` +
-      (team ? `?teamId=${team.id}` : ''),
-    {
-      headers: {
-        Authorization: `Bearer ${process.env.NEXT_PUBLIC_VERCEL_API_TOKEN}`
-      }
-    }
-  ).then((res) => res.json())
 
   return {
     props: {
@@ -75,9 +49,9 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
 type Props = {
   project: Project
   slug: string
-  user: User['user']
-  teams: Team[]
-  projects: Project[]
+  user: User
+  teams: Teams
+  projects: Projects
 }
 
 const Home: VFC<Props> = (props) => {

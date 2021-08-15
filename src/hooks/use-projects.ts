@@ -1,40 +1,8 @@
 import useSWR from 'swr'
+import { Project } from '@/types'
+import { ENDPOINTS } from '@/endpoints'
 
-const URL = 'https://api.vercel.com/v13/projects/'
-
-export type Project = {
-  id: string
-  name: string
-  targets: {
-    production: {
-      alias: string[]
-      deploymentHostname: string
-      meta: Record<string, string>
-      name: string
-      readyState: 'QUEUED' | 'CANCELED' | 'BUILDING' | 'READY' | 'ERROR'
-      createdAt: number
-    }
-  }
-  link: {
-    deployHooks: Array<{
-      id: string
-      name: string
-      ref: string
-      url: string
-    }>
-  }
-  env: Array<{
-    type: string
-    value: string
-    target: string[]
-    id: string
-    key: string
-    createdAt: number
-    updatedAt: number
-  }>
-}
-
-export type Projects = {
+type Projects = {
   projects: Project[]
 }
 
@@ -54,7 +22,7 @@ export const useProject = (
 }
 
 const getProjectsUrl = (teamId?: string) =>
-  `${URL}${teamId ? `?teamId=${teamId}` : ''}`
+  `${ENDPOINTS.projects}${teamId ? `?teamId=${teamId}` : ''}`
 
 const getProjectUrl = (id: string, teamId?: string) =>
-  `${URL}${id}${teamId ? `?teamId=${teamId}` : ''}`
+  `${ENDPOINTS.projects}${id}${teamId ? `?teamId=${teamId}` : ''}`

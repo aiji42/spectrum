@@ -1,16 +1,9 @@
 import useSWR from 'swr'
-
-const URL = 'https://api.vercel.com/www/user'
-
-export type User = {
-  user: {
-    uid: string
-    username: string
-  }
-}
+import { User } from '@/types'
+import { ENDPOINTS } from '@/endpoints'
 
 export const useUser = (): User | undefined => {
-  const { data } = useSWR<User>(URL)
+  const { data } = useSWR<User>(ENDPOINTS.user)
 
   return data
 }

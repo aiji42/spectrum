@@ -1,13 +1,12 @@
 import { StopIcon, PlusCircleIcon } from '@heroicons/react/solid'
 import { useCallback, useEffect, useMemo, useReducer, VFC } from 'react'
-import { Project } from '@/hooks/use-projects'
 import { Fragment, useState } from 'react'
 import { Dialog, Transition } from '@headlessui/react'
 import equal from 'fast-deep-equal'
 import { SplitForm } from '@/components/SpritForm'
 import { useRouter } from 'next/router'
-import { User } from '@/hooks/use-user'
-import { Team } from '@/hooks/use-teams'
+import { Project, Teams, User } from '@/types'
+import { getSplitEnvFromProject } from '@/utils'
 
 export type Splits = Record<
   string,
@@ -21,8 +20,8 @@ export type Splits = Record<
 type Props = {
   project: Project
   slug: string
-  user: User['user']
-  teams: Team[]
+  user: User
+  teams: Teams
 }
 
 export type SplitFormAction =
@@ -58,14 +57,9 @@ const reducer = (state: Splits, action: SplitFormAction) => {
   return newState
 }
 
-const getSplitEnv = (project: Project): Project['env'][number] | undefined =>
-  project.env.find(({ key }) => key === 'SPLIT_CONFIG_BY_SPECTRUM')
-export const runningSplitTests = (project: Project) =>
-  Object.keys(JSON.parse(getSplitEnv(project)?.value ?? '{}')).length > 0
-
 export const SplitTestsCard: VFC<Props> = ({ project, teams, slug }) => {
   const originalSplits = useMemo(
-    () => JSON.parse(getSplitEnv(project)?.value ?? '{}'),
+    () => JSON.parse(getSplitEnvFromProject(project)?.value ?? '{}'),
     [project]
   )
   const [currentSplits, dispatch] = useReducer(reducer, originalSplits)
@@ -90,7 +84,7 @@ export const SplitTestsCard: VFC<Props> = ({ project, teams, slug }) => {
       body: JSON.stringify({
         projectId: project.id,
         teamId,
-        envId: getSplitEnv(project)?.id,
+        envId: getSplitEnvFromProject(project)?.id,
         splits: currentSplits
       })
     }).finally(() => {
