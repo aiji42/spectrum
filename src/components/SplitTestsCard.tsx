@@ -1,6 +1,6 @@
 import { StopIcon, PlusCircleIcon } from '@heroicons/react/solid'
-import { useCallback, useEffect, useReducer, VFC } from 'react'
-import { Fragment, useState } from 'react'
+import { VFC } from 'react'
+import { Fragment } from 'react'
 import { Dialog, Transition } from '@headlessui/react'
 import equal from 'fast-deep-equal'
 import { SplitForm } from '@/components/SpritForm'
@@ -9,7 +9,7 @@ import { useSplitTestCard } from '@/hooks/use-split-tests-card'
 
 type Props = {
   project: Project
-  team?: Team
+  team: Team | null
   splits: Splits
 }
 

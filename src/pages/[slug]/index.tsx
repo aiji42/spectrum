@@ -3,7 +3,7 @@ import { Popover } from '@headlessui/react'
 import { GetServerSideProps } from 'next'
 import { Header } from '@/components/Header'
 import { fetchProjects, fetchUserAndTeams } from '@/lib/server-side'
-import { Projects, Team, Teams, User } from '@/types'
+import { Projects, Teams, User } from '@/types'
 
 export const getServerSideProps: GetServerSideProps = async ({ query }) => {
   const { user, teams } = await fetchUserAndTeams()
@@ -24,7 +24,6 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
       slug: query.slug,
       user,
       teams,
-      team,
       projects
     }
   }
@@ -34,7 +33,6 @@ type Props = {
   slug: string
   user: User
   teams: Teams
-  team?: Team
   projects: Projects
 }
 

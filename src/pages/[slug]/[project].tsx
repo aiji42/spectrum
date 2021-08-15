@@ -11,7 +11,7 @@ import { getSplitEnvFromProject } from '@/utils'
 export const getServerSideProps: GetServerSideProps = async ({ query }) => {
   const { user, teams } = await fetchUserAndTeams()
 
-  const team = teams.find(({ slug }) => slug === query.slug)
+  const team = teams.find(({ slug }) => slug === query.slug) ?? null
   if (!team && user.username !== query.slug)
     return {
       redirect: {
@@ -51,7 +51,7 @@ type Props = {
   slug: string
   user: User
   teams: Teams
-  team?: Team
+  team: Team | null
   projects: Projects
   splits: Splits
 }

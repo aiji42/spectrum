@@ -1,5 +1,7 @@
 import { VFC } from 'react'
 import { Project } from '@/types'
+import dayjs from 'dayjs'
+import { isControllableDeploy } from '@/utils'
 
 type Props = {
   project: Project
@@ -39,7 +41,9 @@ export const ProjectCard: VFC<Props> = ({ project }) => {
           <div className="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
             <dt className="text-sm font-medium text-gray-500">Created</dt>
             <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-              {new Date(project.targets.production.createdAt).toLocaleString()}
+              {dayjs(project.targets.production.createdAt).format(
+                'YYYY-MM-DD HH:mm:ss'
+              )}
             </dd>
           </div>
           <div className="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
@@ -47,11 +51,7 @@ export const ProjectCard: VFC<Props> = ({ project }) => {
               Controllable by Spectrum
             </dt>
             <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-              {project.link.deployHooks.some(
-                ({ name }) => name === 'for-spectrum'
-              )
-                ? 'YES'
-                : 'NO'}
+              {isControllableDeploy(project) ? 'YES' : 'NO'}
             </dd>
           </div>
         </dl>

@@ -24,15 +24,7 @@ export const fetchUserAndTeams = async (): Promise<{
   return { user, teams }
 }
 
-export const fetchProjects = async (
-  query: ParsedUrlQuery
-): Promise<Projects> => {
-  const projects: Projects = await fetch(
-    ENDPOINTS.projects + `?slug=${query.slug}`,
-    {
-      headers: authedHeaders
-    }
-  ).then((res) => res.json())
-
-  return projects
-}
+export const fetchProjects = async (query: ParsedUrlQuery): Promise<Projects> =>
+  await fetch(ENDPOINTS.projects + `?slug=${query.slug}`, {
+    headers: authedHeaders
+  }).then((res) => res.json())

@@ -1,12 +1,9 @@
 import { VFC } from 'react'
 import { GetServerSideProps } from 'next'
+import { fetchUserAndTeams } from '@/lib/server-side'
 
 export const getServerSideProps: GetServerSideProps = async () => {
-  const { user } = await fetch('https://api.vercel.com/www/user', {
-    headers: {
-      Authorization: `Bearer ${process.env.NEXT_PUBLIC_VERCEL_API_TOKEN}`
-    }
-  }).then((res) => res.json())
+  const { user } = await fetchUserAndTeams()
 
   return {
     redirect: {

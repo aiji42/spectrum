@@ -8,3 +8,6 @@ export const getSplitEnvFromProject = (
 export const isRunningSplitTests = (project: Project): boolean =>
   Object.keys(JSON.parse(getSplitEnvFromProject(project)?.value ?? '{}'))
     .length > 0
+
+export const isControllableDeploy = (project: Project): boolean =>
+  project.link.deployHooks.some(({ name }) => name === 'for-spectrum')
