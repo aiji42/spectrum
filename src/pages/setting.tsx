@@ -14,7 +14,7 @@ const Setting: VFC = () => {
         .set({
           vercelToken: e.target.value
         })
-        .then(console.log)
+        .catch(console.log)
   }
 
   return <input type="text" name="vercelToken" onBlur={handleBlur} />

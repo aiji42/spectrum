@@ -1,21 +1,54 @@
 import { Projects, Teams, User } from '@/types'
-import { ParsedUrlQuery } from 'querystring'
 import { ENDPOINTS } from '@/endpoints'
+import * as firebaseAdmin from 'firebase-admin'
+import { FIREBASE_COOKIE_KEY } from 'next-fortress/build/constants'
+import { GetServerSidePropsContext } from 'next'
+import nookies from 'nookies'
 
-const authedHeaders = {
-  Authorization: `Bearer ${process.env.NEXT_PUBLIC_VERCEL_API_TOKEN}`
+if (!firebaseAdmin.apps.length && process.env.FIREBASE_SERVICE_ACCOUNT_KEY) {
+  const { clientEmail, projectId, privateKey } = JSON.parse(
+    process.env.FIREBASE_SERVICE_ACCOUNT_KEY
+  )
+  firebaseAdmin.initializeApp({
+    credential: firebaseAdmin.credential.cert({
+      clientEmail,
+      projectId,
+      privateKey: privateKey.replace(/\\n/g, '\n')
+    })
+  })
 }
 
-export const fetchUserAndTeams = async (): Promise<{
+const authedHeaders = (token: string) => ({
+  Authorization: `Bearer ${token}`
+})
+
+export const fetchUserAndTeams = async (
+  ctx: GetServerSidePropsContext
+): Promise<{
   user: User
   teams: Teams
 }> => {
+  const cookies = nookies.get(ctx)
+  const token = cookies[FIREBASE_COOKIE_KEY]
+  const firebaseUser = await firebaseAdmin.auth().verifyIdToken(token)
+
+  const doc = await firebaseAdmin
+    .firestore()
+    .collection('users')
+    .doc(firebaseUser.uid)
+    .get()
+
+  if (!doc.exists) {
+    // TODO
+    throw new Error()
+  }
+
   const fetchingUser = fetch(ENDPOINTS.user, {
-    headers: authedHeaders
+    headers: authedHeaders(doc.data()?.vercelToken)
   }).then((res) => res.json())
 
   const fetchingTeams = fetch(ENDPOINTS.teams, {
-    headers: authedHeaders
+    headers: authedHeaders(doc.data()?.vercelToken)
   }).then((res) => res.json())
 
   const { user }: { user: User } = await fetchingUser
@@ -24,7 +57,25 @@ export const fetchUserAndTeams = async (): Promise<{
   return { user, teams }
 }
 
-export const fetchProjects = async (query: ParsedUrlQuery): Promise<Projects> =>
-  await fetch(ENDPOINTS.projects + `?slug=${query.slug}`, {
-    headers: authedHeaders
+export const fetchProjects = async (
+  ctx: GetServerSidePropsContext
+): Promise<Projects> => {
+  const cookies = nookies.get(ctx)
+  const token = cookies[FIREBASE_COOKIE_KEY]
+  const firebaseUser = await firebaseAdmin.auth().verifyIdToken(token)
+
+  const doc = await firebaseAdmin
+    .firestore()
+    .collection('users')
+    .doc(firebaseUser.uid)
+    .get()
+
+  if (!doc.exists) {
+    // TODO
+    throw new Error()
+  }
+
+  return await fetch(ENDPOINTS.projects + `?slug=${ctx.query.slug}`, {
+    headers: authedHeaders(doc.data()?.vercelToken)
   }).then((res) => res.json())
+}

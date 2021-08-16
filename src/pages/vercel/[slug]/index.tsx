@@ -7,8 +7,9 @@ import { Projects, Teams, User } from '@/types'
 import { ProjectTitleCard } from '@/components/ProjectTitleCard'
 import Link from 'next/link'
 
-export const getServerSideProps: GetServerSideProps = async ({ query }) => {
-  const { user, teams } = await fetchUserAndTeams()
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
+  const { query } = ctx
+  const { user, teams } = await fetchUserAndTeams(ctx)
 
   const team = teams.find(({ slug }) => slug === query.slug)
   if (!team && user.username !== query.slug)
@@ -19,7 +20,7 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
       }
     }
 
-  const projects = await fetchProjects(query)
+  const projects = await fetchProjects(ctx)
 
   return {
     props: {

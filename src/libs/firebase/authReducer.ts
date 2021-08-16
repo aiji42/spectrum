@@ -38,6 +38,7 @@ const initializeStore = (user: User) =>
     .doc(user.uid)
     .get()
     .then((doc) => {
+      if (doc.exists) return
       doc.ref.set({
         vercelToken: null
       })

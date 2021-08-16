@@ -8,8 +8,9 @@ import { fetchProjects, fetchUserAndTeams } from '@/libs/server-side'
 import { Project, Projects, Splits, Team, Teams, User } from '@/types'
 import { getSplitEnvFromProject } from '@/utils'
 
-export const getServerSideProps: GetServerSideProps = async ({ query }) => {
-  const { user, teams } = await fetchUserAndTeams()
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
+  const { query } = ctx
+  const { user, teams } = await fetchUserAndTeams(ctx)
 
   const team = teams.find(({ slug }) => slug === query.slug) ?? null
   if (!team && user.username !== query.slug)
@@ -20,7 +21,7 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
       }
     }
 
-  const projects = await fetchProjects(query)
+  const projects = await fetchProjects(ctx)
   const project = projects.find(({ name }) => name === query.project)
 
   if (!project)
