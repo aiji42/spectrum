@@ -1,13 +1,20 @@
-import { VFC } from 'react'
+import { useReducer, VFC, Fragment } from 'react'
 import { Project } from '@/types'
 import dayjs from 'dayjs'
 import { isControllableDeploy } from '@/utils'
+import {
+  ExclamationIcon,
+  QuestionMarkCircleIcon
+} from '@heroicons/react/outline'
+import { Dialog, Transition } from '@headlessui/react'
+import Image from 'next/image'
 
 type Props = {
   project: Project
 }
 
 export const ProjectCard: VFC<Props> = ({ project }) => {
+  const [isOpenModal, modalDispatch] = useReducer((state) => !state, false)
   return (
     <div className="bg-white shadow-md overflow-hidden sm:rounded-lg">
       <div className="px-4 py-5 sm:px-6">
@@ -58,10 +65,102 @@ export const ProjectCard: VFC<Props> = ({ project }) => {
               >
                 {isControllableDeploy(project) ? 'YES' : 'NO'}
               </span>
+              {!isControllableDeploy(project) && (
+                <QuestionMarkCircleIcon
+                  className="ml-2 mr-2 h-5 w-5 cursor-pointer inline-block"
+                  aria-hidden="true"
+                  onClick={modalDispatch}
+                />
+              )}
             </dd>
           </div>
         </dl>
       </div>
+
+      <Transition.Root show={isOpenModal} as={Fragment}>
+        <Dialog
+          as="div"
+          auto-reopen="true"
+          className="fixed z-10 inset-0 overflow-y-auto"
+          onClose={modalDispatch}
+        >
+          <div className="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+            <Transition.Child
+              as={Fragment}
+              enter="ease-out duration-300"
+              enterFrom="opacity-0"
+              enterTo="opacity-100"
+              leave="ease-in duration-200"
+              leaveFrom="opacity-100"
+              leaveTo="opacity-0"
+            >
+              <Dialog.Overlay className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" />
+            </Transition.Child>
+
+            {/* This element is to trick the browser into centering the modal contents. */}
+            <span
+              className="hidden sm:inline-block sm:align-middle sm:h-screen"
+              aria-hidden="true"
+            >
+              &#8203;
+            </span>
+            <Transition.Child
+              as={Fragment}
+              enter="ease-out duration-300"
+              enterFrom="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+              enterTo="opacity-100 translate-y-0 sm:scale-100"
+              leave="ease-in duration-200"
+              leaveFrom="opacity-100 translate-y-0 sm:scale-100"
+              leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+            >
+              <div className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
+                <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+                  <Dialog.Title
+                    as="h3"
+                    className="text-lg leading-6 font-medium text-gray-900"
+                  >
+                    <ExclamationIcon
+                      className="-ml-1 mr-2 h-5 w-5 inline-block text-red-800"
+                      aria-hidden="true"
+                    />
+                    The web hook is not registered.
+                  </Dialog.Title>
+                  <div className="mt-2">
+                    <p className="mt-1 max-w-2xl text-sm text-gray-500">
+                      Spectrum will deploy to start or update for split tests,
+                      so please follow the steps below to register your web hook
+                      in Vercel.
+                    </p>
+                    <Image
+                      src="/deploy-hook-sample.png"
+                      alt="deploy hook sample"
+                      width={778}
+                      height={329}
+                    />
+                    <p className="mt-1 max-w-2xl text-sm text-gray-500">
+                      In Vercel, <b>Project Settings</b> &gt; <b>git</b> &gt;{' '}
+                      <b>Deploy Hooks</b>
+                    </p>
+                    <p className="mt-1 max-w-2xl text-sm text-gray-500">
+                      Name must be &quot;<b>for-spectrum</b>&quot; and branch
+                      must be the same as the value registered in the production
+                      deployment (e.g. main).
+                    </p>
+                  </div>
+                </div>
+                <div className="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+                  <button
+                    className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-indigo-600 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:ml-3 sm:w-auto sm:text-sm"
+                    onClick={modalDispatch}
+                  >
+                    Close
+                  </button>
+                </div>
+              </div>
+            </Transition.Child>
+          </div>
+        </Dialog>
+      </Transition.Root>
     </div>
   )
 }

@@ -12,7 +12,7 @@ import {
   UsersIcon
 } from '@heroicons/react/outline'
 import { Project, Projects, Teams, User } from '@/types'
-import { isRunningSplitTests } from '@/utils'
+import { isControllableDeploy, isRunningSplitTests } from '@/utils'
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(' ')
@@ -179,6 +179,10 @@ export const Header: VFC<Props> = ({
                               <p className="text-base font-medium text-gray-900">
                                 {project.name}
                               </p>
+                              <span className="text-sm text-gray-500">
+                                {!isControllableDeploy(project) && 'Not '}
+                                Controllable
+                              </span>
                             </div>
                           </a>
                         </Link>
