@@ -35,7 +35,6 @@ export const SplitTestsCard: VFC<Props> = ({ project, team, splits }) => {
           </span>
         )}
       </div>
-
       {Object.entries(status.currentSplits).map(([key, split]) => (
         <div
           className={`py-4 bg-white ${

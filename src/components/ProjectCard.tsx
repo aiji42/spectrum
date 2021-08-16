@@ -8,13 +8,15 @@ import {
 } from '@heroicons/react/outline'
 import { Dialog, Transition } from '@headlessui/react'
 import Image from 'next/image'
+import { useProject } from '@/hooks/use-projects'
 
 type Props = {
   project: Project
 }
 
-export const ProjectCard: VFC<Props> = ({ project }) => {
+export const ProjectCard: VFC<Props> = (props) => {
   const [isOpenModal, modalDispatch] = useReducer((state) => !state, false)
+  const project = useProject({ refreshInterval: 5000 }) ?? props.project
   return (
     <div className="bg-white shadow-md overflow-hidden sm:rounded-lg">
       <div className="px-4 py-5 sm:px-6">

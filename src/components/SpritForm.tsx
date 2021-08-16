@@ -76,7 +76,7 @@ export const SplitForm: VFC<Props> = ({ dispatch, editingKey, splitsData }) => {
               <input
                 {...register('name', { required: true })}
                 type="text"
-                className="focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
+                className="focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md placeholder-gray-400"
                 placeholder="test1"
                 defaultValue={data.name}
               />
@@ -88,7 +88,7 @@ export const SplitForm: VFC<Props> = ({ dispatch, editingKey, splitsData }) => {
               <input
                 {...register('path', { required: true })}
                 type="text"
-                className="focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
+                className="focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md placeholder-gray-400"
                 placeholder="/foo/bar"
                 defaultValue={data.path}
               />
@@ -100,7 +100,7 @@ export const SplitForm: VFC<Props> = ({ dispatch, editingKey, splitsData }) => {
               <input
                 {...register('original.branch', { required: true })}
                 type="text"
-                className="focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
+                className="focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md placeholder-gray-400"
                 placeholder="main"
                 defaultValue={data.originalBranch}
               />
@@ -112,7 +112,7 @@ export const SplitForm: VFC<Props> = ({ dispatch, editingKey, splitsData }) => {
               <input
                 {...register('original.host', { required: true })}
                 type="text"
-                className="focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
+                className="focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md placeholder-gray-400"
                 placeholder="original.example.com"
                 defaultValue={data.originalHost}
               />
@@ -124,7 +124,7 @@ export const SplitForm: VFC<Props> = ({ dispatch, editingKey, splitsData }) => {
               <input
                 {...register('challenger.branch', { required: true })}
                 type="text"
-                className="focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
+                className="focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md placeholder-gray-400"
                 placeholder="challenger"
                 defaultValue={data.challengerBranch}
               />
@@ -136,7 +136,7 @@ export const SplitForm: VFC<Props> = ({ dispatch, editingKey, splitsData }) => {
               <input
                 {...register('challenger.host', { required: true })}
                 type="text"
-                className="focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
+                className="focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md placeholder-gray-400"
                 placeholder="challenger.example.com"
                 defaultValue={data.challengerHost}
               />
@@ -148,7 +148,7 @@ export const SplitForm: VFC<Props> = ({ dispatch, editingKey, splitsData }) => {
               <input
                 {...register('original.weight', { required: true, min: 1 })}
                 type="number"
-                className="focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
+                className="focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md placeholder-gray-400"
                 defaultValue={data.originalWeight}
               />
             </div>
@@ -159,7 +159,7 @@ export const SplitForm: VFC<Props> = ({ dispatch, editingKey, splitsData }) => {
               <input
                 {...register('challenger.weight', { required: true, min: 1 })}
                 type="number"
-                className="focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
+                className="focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md placeholder-gray-400"
                 defaultValue={data.challengerWeight}
               />
             </div>
@@ -170,7 +170,7 @@ export const SplitForm: VFC<Props> = ({ dispatch, editingKey, splitsData }) => {
               <input
                 {...register('cookie.maxAge', { required: true, min: 1 })}
                 type="number"
-                className="focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
+                className="focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md placeholder-gray-400"
                 defaultValue={data.cookieMaxAge}
               />
             </div>

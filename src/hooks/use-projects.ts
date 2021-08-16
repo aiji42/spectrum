@@ -1,28 +1,31 @@
-import useSWR from 'swr'
-import { Project } from '@/types'
+import useSWR, { SWRConfiguration } from 'swr'
+import { Project, Projects } from '@/types'
 import { ENDPOINTS } from '@/endpoints'
+import { useRouter } from 'next/router'
 
-type Projects = {
-  projects: Project[]
-}
-
-export const useProjects = (teamId?: string): Projects | undefined => {
-  const { data } = useSWR<Projects>(getProjectsUrl(teamId))
-
-  return data
-}
-
-export const useProject = (
-  id: string,
-  teamId?: string
-): Project | undefined => {
-  const { data } = useSWR<Project>(getProjectUrl(id, teamId))
+export const useProjects = (
+  config?: SWRConfiguration
+): Projects | undefined => {
+  const router = useRouter()
+  const { data } = useSWR<Projects>(
+    getProjectsUrl(
+      typeof router.query.slug === 'string' ? router.query.slug : ''
+    ),
+    config
+  )
 
   return data
 }
 
-const getProjectsUrl = (teamId?: string) =>
-  `${ENDPOINTS.projects}${teamId ? `?teamId=${teamId}` : ''}`
+const getProjectsUrl = (slug: string) => `${ENDPOINTS.projects}?slug=${slug}`
 
-const getProjectUrl = (id: string, teamId?: string) =>
-  `${ENDPOINTS.projects}${id}${teamId ? `?teamId=${teamId}` : ''}`
+export const useProject = (config?: SWRConfiguration): Project | undefined => {
+  const router = useRouter()
+  const projects = useProjects(config)
+
+  return projects?.find(
+    ({ name }) =>
+      (typeof router.query.project === 'string' ? router.query.project : '') ===
+      name
+  )
+}
