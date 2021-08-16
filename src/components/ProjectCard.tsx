@@ -9,7 +9,7 @@ type Props = {
 
 export const ProjectCard: VFC<Props> = ({ project }) => {
   return (
-    <div className="bg-white shadow overflow-hidden sm:rounded-lg">
+    <div className="bg-white shadow-md overflow-hidden sm:rounded-lg">
       <div className="px-4 py-5 sm:px-6">
         <h3 className="text-lg leading-6 font-medium text-gray-900">
           {project.name}
@@ -51,7 +51,13 @@ export const ProjectCard: VFC<Props> = ({ project }) => {
               Controllable by Spectrum
             </dt>
             <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-              {isControllableDeploy(project) ? 'YES' : 'NO'}
+              <span
+                className={`text-${
+                  isControllableDeploy(project) ? 'green' : 'red'
+                }-600`}
+              >
+                {isControllableDeploy(project) ? 'YES' : 'NO'}
+              </span>
             </dd>
           </div>
         </dl>

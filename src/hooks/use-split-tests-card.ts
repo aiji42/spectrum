@@ -1,7 +1,16 @@
-import { Dispatch, useCallback, useEffect, useReducer, useState } from 'react'
+import {
+  Dispatch,
+  useCallback,
+  useEffect,
+  useMemo,
+  useReducer,
+  useState
+} from 'react'
 import { useRouter } from 'next/router'
 import { deploySplitTest } from '@/lib/client-side'
 import { Project, SplitFormAction, Splits, Team } from '@/types'
+import { isControllableDeploy } from '@/utils'
+import equal from 'fast-deep-equal'
 
 const reducer = (state: Splits, action: SplitFormAction) => {
   const newState = { ...state }
@@ -29,7 +38,12 @@ type UseSplitTestsCard = ({
   team: Team | undefined | null
   splits: Splits
 }) => [
-  { editingKey: string | null; currentSplits: Splits },
+  {
+    editingKey: string | null
+    currentSplits: Splits
+    deployable: boolean
+    controllable: boolean
+  },
   {
     handleClose: () => void
     handleCreate: () => void
@@ -46,6 +60,11 @@ export const useSplitTestCard: UseSplitTestsCard = ({
 }) => {
   const [currentSplits, formDispatch] = useReducer(reducer, splits)
   const [editingKey, setEditingKey] = useState<string | null>(null)
+  const controllable = useMemo(() => isControllableDeploy(project), [project])
+  const deployable = useMemo(
+    () => controllable && !equal(currentSplits, splits),
+    [controllable, currentSplits, splits]
+  )
   const handleClose = useCallback(() => setEditingKey(null), [])
   const handleCreate = useCallback(() => setEditingKey(''), [])
   const handleEdit = useCallback((key: string) => setEditingKey(key), [])
@@ -66,7 +85,7 @@ export const useSplitTestCard: UseSplitTestsCard = ({
   }, [currentSplits, project, router, team])
 
   return [
-    { editingKey, currentSplits },
+    { editingKey, currentSplits, deployable, controllable },
     { handleClose, handleCreate, handleEdit, handleDeploy, formDispatch }
   ]
 }

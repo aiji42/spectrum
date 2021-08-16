@@ -9,5 +9,8 @@ export const isRunningSplitTests = (project: Project): boolean =>
   Object.keys(JSON.parse(getSplitEnvFromProject(project)?.value ?? '{}'))
     .length > 0
 
+export const getWebhookByProject = (project: Project): string | undefined =>
+  project.link.deployHooks.find(({ name }) => name === 'for-spectrum')?.url
+
 export const isControllableDeploy = (project: Project): boolean =>
-  project.link.deployHooks.some(({ name }) => name === 'for-spectrum')
+  !!getWebhookByProject(project)

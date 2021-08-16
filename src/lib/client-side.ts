@@ -1,4 +1,4 @@
-import { getSplitEnvFromProject } from '@/utils'
+import { getSplitEnvFromProject, getWebhookByProject } from '@/utils'
 import { Project, Splits, Team } from '@/types'
 
 export const deploySplitTest = (
@@ -15,7 +15,8 @@ export const deploySplitTest = (
       projectId: project.id,
       teamId: team?.id,
       envId: getSplitEnvFromProject(project)?.id,
-      splits
+      splits,
+      webhook: getWebhookByProject(project)
     })
   })
 }

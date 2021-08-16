@@ -1,8 +1,7 @@
-import { StopIcon, PlusCircleIcon } from '@heroicons/react/solid'
+import { PlayIcon, PlusCircleIcon } from '@heroicons/react/solid'
 import { VFC } from 'react'
 import { Fragment } from 'react'
 import { Dialog, Transition } from '@headlessui/react'
-import equal from 'fast-deep-equal'
 import { SplitForm } from '@/components/SpritForm'
 import { Project, Splits, Team } from '@/types'
 import { useSplitTestCard } from '@/hooks/use-split-tests-card'
@@ -18,19 +17,19 @@ export const SplitTestsCard: VFC<Props> = ({ project, team, splits }) => {
   const isEditing = status.editingKey !== null
 
   return (
-    <div className="shadow sm:rounded-lg">
-      <div className="flex items-center justify-between bg-gray-800 px-5 py-4 sm:rounded-t-lg">
+    <div className="shadow-md sm:rounded-lg">
+      <div className="flex items-center justify-between bg-gradient-to-r from-indigo-400 to-indigo-500 px-5 py-4 sm:rounded-t-lg">
         <div className="flex-1 min-w-0">
           <h3 className="text-white text-xl sm:truncate">Split Tests</h3>
         </div>
-        {!equal(status.currentSplits, splits) && (
+        {status.deployable && (
           <span className="ml-3">
             <button
               type="button"
-              className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+              className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
               onClick={helper.handleDeploy}
             >
-              <StopIcon className="-ml-1 mr-2 h-5 w-5" aria-hidden="true" />
+              <PlayIcon className="-ml-1 mr-2 h-5 w-5" aria-hidden="true" />
               Deploy
             </button>
           </span>
@@ -39,7 +38,9 @@ export const SplitTestsCard: VFC<Props> = ({ project, team, splits }) => {
 
       {Object.entries(status.currentSplits).map(([key, split]) => (
         <div
-          className="py-4 bg-white cursor-pointer hover:bg-gray-50"
+          className={`py-4 bg-white ${
+            status.controllable ? 'cursor-pointer hover:bg-gray-50' : ''
+          }`}
           key={key}
           onClick={() => helper.handleEdit(key)}
         >
@@ -56,7 +57,7 @@ export const SplitTestsCard: VFC<Props> = ({ project, team, splits }) => {
                   <div className="relative" key={branch}>
                     <dt>
                       <div className="absolute flex items-center justify-center h-12 w-12 rounded-md bg-indigo-500 text-white">
-                        {['A', 'B', 'C', 'D'][index]}
+                        {['A', 'B'][index]}
                       </div>
                       <p className="ml-16 text-lg leading-6 font-medium text-gray-900">
                         {branch}
@@ -73,8 +74,9 @@ export const SplitTestsCard: VFC<Props> = ({ project, team, splits }) => {
       <div className="flex justify-center py-4 px-4 mt-4">
         <button
           type="button"
-          className="inline-flex items-center px-4 py-3 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-500 hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-400"
+          className="inline-flex items-center px-4 py-3 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-500 disabled:opacity-50 hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-400"
           onClick={helper.handleCreate}
+          disabled={!status.controllable}
         >
           <PlusCircleIcon className="-ml-1 mr-2 h-5 w-5" aria-hidden="true" />
           Add Split Test
