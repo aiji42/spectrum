@@ -20,14 +20,28 @@ const reducer = (
   action: Action
 ): User | Record<string, never> => {
   switch (action.type) {
-    case 'login':
+    case 'login': {
+      initializeStore(action.payload.user)
       return action.payload.user
+    }
     case 'logout':
       return initialState
     default:
       return state
   }
 }
+
+const initializeStore = (user: User) =>
+  firebase
+    .firestore()
+    .collection('users')
+    .doc(user.uid)
+    .get()
+    .then((doc) => {
+      doc.ref.set({
+        vercelToken: null
+      })
+    })
 
 export default {
   initialState,

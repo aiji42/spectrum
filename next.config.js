@@ -9,6 +9,12 @@ const withFortress = require('next-fortress')({
       mode: 'redirect',
       destination: '/',
       inspectBy: 'firebase'
+    },
+    {
+      source: '/setting',
+      mode: 'redirect',
+      destination: '/',
+      inspectBy: 'firebase'
     }
   ],
   host: process.env.VERCEL_URL ?? 'http://localhost:3000',

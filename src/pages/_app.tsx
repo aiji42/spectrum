@@ -34,7 +34,7 @@ const fetcher = (url: string) =>
 
 const MyApp: VFC<AppProps> = ({ Component, pageProps }) => {
   useFortressWithFirebase(firebase)
-  const [state, dispatch] = useReducer(
+  const [user, dispatch] = useReducer(
     authReducer.reducer,
     authReducer.initialState
   )
@@ -48,7 +48,7 @@ const MyApp: VFC<AppProps> = ({ Component, pageProps }) => {
         fetcher
       }}
     >
-      <AuthContext.Provider value={state}>
+      <AuthContext.Provider value={user}>
         <div className="relative">
           <Component {...pageProps} />
         </div>
