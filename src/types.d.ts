@@ -24,7 +24,7 @@ export type Project = {
       createdAt: number
     }
   }
-  link: {
+  link?: {
     deployHooks: Array<{
       id: string
       name: string
@@ -32,15 +32,17 @@ export type Project = {
       url: string
     }>
   }
-  env: Array<{
-    type: string
-    value: string
-    target: string[]
-    id: string
-    key: string
-    createdAt: number
-    updatedAt: number
-  }>
+  env?: Array<Environment>
+}
+
+export type Environment = {
+  type: string
+  value: string
+  target: string[]
+  id: string
+  key: string
+  createdAt: number
+  updatedAt: number
 }
 
 export type Projects = Project[]
