@@ -7,6 +7,10 @@
     "plugin:react/recommended",
     "prettier"
   ],
+  "env": {
+    "node": true,
+    "commonjs": true
+  },
   "rules": {
     "react/prop-types": "off",
     "react/react-in-jsx-scope": "off"

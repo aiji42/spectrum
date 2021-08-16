@@ -1,10 +1,15 @@
 import '@/styles/globals.css'
 import type { AppProps } from 'next/app'
 import { SWRConfig } from 'swr'
-import { VFC } from 'react'
+import { useEffect, useReducer, VFC } from 'react'
 import 'nprogress/nprogress.css'
 import nprogress from 'nprogress'
 import Router from 'next/router'
+import AuthContext from '@/libs/firebase/AuthContext'
+import authReducer from '@/libs/firebase/authReducer'
+import { listenAuthState } from '@/libs/firebase/firebase'
+import firebase from 'firebase/app'
+import { useFortressWithFirebase } from 'next-fortress/build/client'
 
 nprogress.configure({ showSpinner: false, speed: 400, minimum: 0.25 })
 
@@ -28,15 +33,26 @@ const fetcher = (url: string) =>
   }).then((res) => res.json())
 
 const MyApp: VFC<AppProps> = ({ Component, pageProps }) => {
+  useFortressWithFirebase(firebase)
+  const [state, dispatch] = useReducer(
+    authReducer.reducer,
+    authReducer.initialState
+  )
+  useEffect(() => {
+    listenAuthState(dispatch)
+  }, [])
+
   return (
     <SWRConfig
       value={{
         fetcher
       }}
     >
-      <div className="relative">
-        <Component {...pageProps} />
-      </div>
+      <AuthContext.Provider value={state}>
+        <div className="relative">
+          <Component {...pageProps} />
+        </div>
+      </AuthContext.Provider>
     </SWRConfig>
   )
 }

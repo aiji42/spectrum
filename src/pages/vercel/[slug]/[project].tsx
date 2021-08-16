@@ -4,7 +4,7 @@ import { GetServerSideProps } from 'next'
 import { Header } from '@/components/Header'
 import { ProjectCard } from '@/components/ProjectCard'
 import { SplitTestsCard } from '@/components/SplitTestsCard'
-import { fetchProjects, fetchUserAndTeams } from '@/lib/server-side'
+import { fetchProjects, fetchUserAndTeams } from '@/libs/server-side'
 import { Project, Projects, Splits, Team, Teams, User } from '@/types'
 import { getSplitEnvFromProject } from '@/utils'
 
@@ -15,8 +15,8 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
   if (!team && user.username !== query.slug)
     return {
       redirect: {
-        statusCode: 301,
-        destination: `/${user.username}`
+        statusCode: 302,
+        destination: `/vercel/${user.username}`
       }
     }
 
@@ -26,8 +26,8 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
   if (!project)
     return {
       redirect: {
-        statusCode: 301,
-        destination: `/${query.slug}`
+        statusCode: 302,
+        destination: `/vercel/${query.slug}`
       }
     }
 

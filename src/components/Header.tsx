@@ -98,7 +98,7 @@ export const Header: VFC<Props> = ({
                         </Link>
                       )}
                       {teams.map((team) => (
-                        <Link href={`/${team.slug}`} key={team.id}>
+                        <Link href={`/vercel/${team.slug}`} key={team.id}>
                           <a
                             className="-m-3 p-3 flex items-start rounded-lg hover:bg-gray-50"
                             onClick={() => close()}
@@ -156,7 +156,7 @@ export const Header: VFC<Props> = ({
                     <div className="relative grid gap-6 bg-white px-5 py-6 sm:gap-8 sm:p-8">
                       {projects.map((project) => (
                         <Link
-                          href={`/${slug}/${project.name}`}
+                          href={`/vercel/${slug}/${project.name}`}
                           key={project.id}
                         >
                           <a

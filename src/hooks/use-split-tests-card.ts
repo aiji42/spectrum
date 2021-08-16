@@ -7,7 +7,7 @@ import {
   useState
 } from 'react'
 import { useRouter } from 'next/router'
-import { deploySplitTest } from '@/lib/client-side'
+import { deploySplitTest } from '@/libs/client-side'
 import { Project, SplitFormAction, Splits, Team } from '@/types'
 import { isControllableDeploy } from '@/utils'
 import equal from 'fast-deep-equal'

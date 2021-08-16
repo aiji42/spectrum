@@ -2,7 +2,7 @@ import { VFC } from 'react'
 import { Popover } from '@headlessui/react'
 import { GetServerSideProps } from 'next'
 import { Header } from '@/components/Header'
-import { fetchProjects, fetchUserAndTeams } from '@/lib/server-side'
+import { fetchProjects, fetchUserAndTeams } from '@/libs/server-side'
 import { Projects, Teams, User } from '@/types'
 
 export const getServerSideProps: GetServerSideProps = async ({ query }) => {
@@ -12,8 +12,8 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
   if (!team && user.username !== query.slug)
     return {
       redirect: {
-        statusCode: 301,
-        destination: `/${user.username}`
+        statusCode: 302,
+        destination: `/vercel/${user.username}`
       }
     }
 
