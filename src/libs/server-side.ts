@@ -28,27 +28,14 @@ export const fetchUserAndTeams = async (
   user: User
   teams: Teams
 }> => {
-  const cookies = nookies.get(ctx)
-  const token = cookies[FIREBASE_COOKIE_KEY]
-  const firebaseUser = await firebaseAdmin.auth().verifyIdToken(token)
-
-  const doc = await firebaseAdmin
-    .firestore()
-    .collection('users')
-    .doc(firebaseUser.uid)
-    .get()
-
-  if (!doc.exists) {
-    // TODO
-    throw new Error()
-  }
+  const token = await getToken(ctx)
 
   const fetchingUser = fetch(ENDPOINTS.user, {
-    headers: authedHeaders(doc.data()?.vercelToken)
+    headers: authedHeaders(token)
   }).then((res) => res.json())
 
   const fetchingTeams = fetch(ENDPOINTS.teams, {
-    headers: authedHeaders(doc.data()?.vercelToken)
+    headers: authedHeaders(token)
   }).then((res) => res.json())
 
   const { user }: { user: User } = await fetchingUser
@@ -60,6 +47,14 @@ export const fetchUserAndTeams = async (
 export const fetchProjects = async (
   ctx: GetServerSidePropsContext
 ): Promise<Projects> => {
+  const token = await getToken(ctx)
+
+  return await fetch(ENDPOINTS.projects + `?slug=${ctx.query.slug}`, {
+    headers: authedHeaders(token)
+  }).then((res) => res.json())
+}
+
+const getToken = async (ctx: GetServerSidePropsContext): Promise<string> => {
   const cookies = nookies.get(ctx)
   const token = cookies[FIREBASE_COOKIE_KEY]
   const firebaseUser = await firebaseAdmin.auth().verifyIdToken(token)
@@ -75,7 +70,5 @@ export const fetchProjects = async (
     throw new Error()
   }
 
-  return await fetch(ENDPOINTS.projects + `?slug=${ctx.query.slug}`, {
-    headers: authedHeaders(doc.data()?.vercelToken)
-  }).then((res) => res.json())
+  return doc.data()?.vercelToken ?? ''
 }

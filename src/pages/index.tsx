@@ -1,13 +1,5 @@
 import { VFC } from 'react'
-import { GetServerSideProps } from 'next'
-import { fetchUserAndTeams } from '@/libs/server-side'
 import { auth, Login, Logout } from '@/libs/firebase/firebase'
-
-// export const getServerSideProps: GetServerSideProps = async () => {
-//   const { user } = await fetchUserAndTeams()
-//
-//
-// }
 
 const Home: VFC = () => {
   return (

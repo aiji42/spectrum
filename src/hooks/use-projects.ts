@@ -2,15 +2,24 @@ import useSWR, { SWRConfiguration } from 'swr'
 import { Project, Projects } from '@/types'
 import { ENDPOINTS } from '@/endpoints'
 import { useRouter } from 'next/router'
+import AuthContext from '@/libs/firebase/AuthContext'
+import { useContext } from 'react'
 
 export const useProjects = (
   config?: SWRConfiguration
 ): Projects | undefined => {
+  const authInfo = useContext(AuthContext)
   const router = useRouter()
   const { data } = useSWR<Projects>(
     getProjectsUrl(
       typeof router.query.slug === 'string' ? router.query.slug : ''
     ),
+    (url: string) =>
+      fetch(url, {
+        headers: {
+          Authorization: `Bearer ${authInfo?.storeDoc?.data()?.vercelToken}`
+        }
+      }).then((res) => res.json()),
     config
   )
 

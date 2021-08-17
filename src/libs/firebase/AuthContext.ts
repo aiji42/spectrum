@@ -1,7 +1,5 @@
 import { createContext } from 'react'
-import firebase from 'firebase'
+import { State } from './authReducer'
 
-type User = firebase.User
-
-const AuthContext = createContext<User | Record<string, never>>({})
+const AuthContext = createContext<State>(null)
 export default AuthContext

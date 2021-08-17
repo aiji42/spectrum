@@ -1,50 +1,29 @@
 import firebase from 'firebase'
 
-type User = firebase.User
-
-const initialState = {}
+export type State = {
+  user: firebase.User
+  storeDoc: firebase.firestore.DocumentSnapshot<firebase.firestore.DocumentData>
+} | null
 
 export type Action =
   | {
       type: 'login'
       payload: {
-        user: User
+        user: firebase.User
+        storeDoc: firebase.firestore.DocumentSnapshot<firebase.firestore.DocumentData>
       }
     }
   | {
       type: 'logout'
     }
 
-const reducer = (
-  state: User | Record<string, never>,
-  action: Action
-): User | Record<string, never> => {
+export const reducer = (state: State, action: Action): State => {
   switch (action.type) {
-    case 'login': {
-      initializeStore(action.payload.user)
-      return action.payload.user
-    }
+    case 'login':
+      return action.payload
     case 'logout':
-      return initialState
+      return null
     default:
       return state
   }
-}
-
-const initializeStore = (user: User) =>
-  firebase
-    .firestore()
-    .collection('users')
-    .doc(user.uid)
-    .get()
-    .then((doc) => {
-      if (doc.exists) return
-      doc.ref.set({
-        vercelToken: null
-      })
-    })
-
-export default {
-  initialState,
-  reducer
 }

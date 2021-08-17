@@ -1,5 +1,6 @@
 import firebase from 'firebase/app'
 import 'firebase/auth'
+import 'firebase/firestore'
 import { Dispatch } from 'react'
 import { Action } from './authReducer'
 
@@ -23,7 +24,7 @@ export const Login = (): void => {
     .then((result) => {
       return result
     })
-    .catch(function (error) {
+    .catch((error) => {
       console.log(error)
       const errorCode = error.code
       console.log(errorCode)
@@ -34,21 +35,31 @@ export const Login = (): void => {
 
 export const listenAuthState = (dispatch: Dispatch<Action>): Unsubscribe => {
   return firebase.auth().onAuthStateChanged((user) => {
-    if (user) {
-      // User is signed in.
-      dispatch({
-        type: 'login',
-        payload: {
-          user
-        }
-      })
-    } else {
-      // User is signed out.
-      // ...
+    if (!user) {
       dispatch({
         type: 'logout'
       })
+      return
     }
+
+    firebase
+      .firestore()
+      .collection('users')
+      .doc(user.uid)
+      .get()
+      .then((doc) => {
+        if (!doc.exists)
+          doc.ref.set({
+            vercelToken: null
+          })
+        dispatch({
+          type: 'login',
+          payload: {
+            user,
+            storeDoc: doc
+          }
+        })
+      })
   })
 }
 
