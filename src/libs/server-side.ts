@@ -6,9 +6,11 @@ import { GetServerSidePropsContext } from 'next'
 import nookies from 'nookies'
 
 if (!firebaseAdmin.apps.length && process.env.FIREBASE_SERVICE_ACCOUNT_KEY) {
-  const { clientEmail, projectId, privateKey } = JSON.parse(
-    process.env.FIREBASE_SERVICE_ACCOUNT_KEY
-  )
+  const {
+    client_email: clientEmail,
+    project_id: projectId,
+    private_key: privateKey
+  } = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT_KEY)
   firebaseAdmin.initializeApp({
     credential: firebaseAdmin.credential.cert({
       clientEmail,
