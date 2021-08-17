@@ -2,18 +2,20 @@ import { Fragment, VFC } from 'react'
 import { Popover, Transition } from '@headlessui/react'
 import {
   ChevronDownIcon,
-  LightningBoltIcon as LightningBoltIconSolid
+  LightningBoltIcon as LightningBoltIconSolid,
+  UserIcon as UserIconSolid
 } from '@heroicons/react/solid'
 import Link from 'next/link'
 import Image from 'next/image'
 import {
   LightningBoltIcon,
   UserIcon,
-  UsersIcon
+  UsersIcon,
+  AdjustmentsIcon
 } from '@heroicons/react/outline'
 import { Project, Projects, Teams, User } from '@/types'
 import { isControllableDeploy, isRunningSplitTests } from '@/utils'
-import { firebaseUser, Login, Logout } from '@/libs/firebase/firebase'
+import { firebaseUser, Login } from '@/libs/firebase/firebase'
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(' ')
@@ -38,7 +40,7 @@ export const Header: VFC<Props> = ({
 
   return (
     <div className="flex items-center border-b-2 border-gray-100 py-4 justify-start space-x-10">
-      <div className="flex justify-start lg:w-0 lg:flex-1">
+      <div className="flex-1 justify-start lg:w-0">
         <div className="h-10 w-auto">
           <Image
             src="/prism.svg"
@@ -58,14 +60,18 @@ export const Header: VFC<Props> = ({
                 <Popover.Button
                   className={classNames(
                     open ? 'text-gray-900' : 'text-gray-500',
-                    'group bg-white rounded-md inline-flex items-center text-sm sm:text-base font-medium hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500'
+                    'mt-1 group bg-white rounded-md inline-flex items-center text-sm sm:text-base font-medium hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500'
                   )}
                 >
-                  <span>{slug ?? 'Team'}</span>
+                  <span className="hidden sm:block">{slug ?? 'Team'}</span>
+                  <UserIconSolid
+                    className="sm:hidden h-6 w-6 text-gray-500 hover:text-gray-900"
+                    aria-hidden="true"
+                  />
                   <ChevronDownIcon
                     className={classNames(
                       open ? 'text-gray-600' : 'text-gray-400',
-                      'ml-2 h-5 w-5 group-hover:text-gray-500'
+                      'h-6 w-6 group-hover:text-gray-500'
                     )}
                     aria-hidden="true"
                   />
@@ -135,14 +141,20 @@ export const Header: VFC<Props> = ({
                 <Popover.Button
                   className={classNames(
                     open ? 'text-gray-900' : 'text-gray-500',
-                    'group bg-white rounded-md inline-flex items-center text-sm sm:text-base font-medium hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500'
+                    'mt-1 group bg-white rounded-md inline-flex items-center text-sm sm:text-base font-medium hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500'
                   )}
                 >
-                  <span>{project?.name ?? 'Project'}</span>
+                  <span className="hidden sm:block">
+                    {project?.name ?? 'Project'}
+                  </span>
+                  <LightningBoltIconSolid
+                    className="sm:hidden h-6 w-6 text-gray-500 hover:text-gray-900"
+                    aria-hidden="true"
+                  />
                   <ChevronDownIcon
                     className={classNames(
                       open ? 'text-gray-600' : 'text-gray-400',
-                      'ml-2 h-5 w-5 group-hover:text-gray-500'
+                      'ml-2 h-6 w-6 group-hover:text-gray-500'
                     )}
                     aria-hidden="true"
                   />
@@ -202,15 +214,16 @@ export const Header: VFC<Props> = ({
           </Popover>
         )}
       </Popover.Group>
-      <div className="hidden md:flex items-center justify-end md:flex-1 lg:w-0">
+      <div className="flex items-center justify-end">
         {isLoggedIn ? (
-          <a
-            href="#"
-            onClick={Logout}
-            className="ml-8 whitespace-nowrap inline-flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-base font-medium text-gray-500 bg-gray-200 hover:bg-gray-300"
-          >
-            Sign out
-          </a>
+          <Link href="/setting">
+            <a className="mt-1 mx-4">
+              <AdjustmentsIcon
+                className="h-6 w-6 text-gray-500 hover:text-gray-900"
+                aria-hidden="true"
+              />
+            </a>
+          </Link>
         ) : (
           <a
             href="#"

@@ -5,6 +5,7 @@ import { useRouter } from 'next/router'
 import AuthContext from '@/libs/firebase/AuthContext'
 import { FirestoreDocumentData } from '@/types'
 import { useForm } from 'react-hook-form'
+import { Logout } from '@/libs/firebase/firebase'
 
 const errorToast = (error: string) => {
   Toast.snackbar()
@@ -95,10 +96,17 @@ export const SettingForm: VFC = () => {
                 </div>
               </div>
             </div>
-            <div className="px-4 py-3 bg-gray-50 text-right sm:px-6">
+            <div className="px-4 py-3 bg-gray-50 flex justify-between sm:px-6">
+              <a
+                href="#"
+                onClick={Logout}
+                className="py-2 px-4 text-sm font-medium text-gray-500 hover:text-gray-600"
+              >
+                Sign out
+              </a>
               <button
                 type="submit"
-                className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                className="py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
               >
                 Save
               </button>

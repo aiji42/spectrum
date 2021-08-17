@@ -9,6 +9,7 @@ import { reducer } from '@/libs/firebase/authReducer'
 import { listenAuthState } from '@/libs/firebase/firebase'
 import firebase from 'firebase/app'
 import { useFortressWithFirebase } from 'next-fortress/build/client'
+import Head from 'next/head'
 
 nprogress.configure({ showSpinner: false, speed: 400, minimum: 0.25 })
 
@@ -34,6 +35,9 @@ const MyApp: VFC<AppProps> = ({ Component, pageProps }) => {
 
   return (
     <AuthContext.Provider value={firebaseState}>
+      <Head>
+        <title>Spectrum</title>
+      </Head>
       <div className="relative">
         <Component {...pageProps} />
       </div>
