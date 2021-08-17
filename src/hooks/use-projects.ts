@@ -10,20 +10,23 @@ export const useProjects = (
 ): Projects | undefined => {
   const authInfo = useContext(AuthContext)
   const router = useRouter()
-  const { data } = useSWR<Projects>(
-    getProjectsUrl(
-      typeof router.query.slug === 'string' ? router.query.slug : ''
-    ),
-    (url: string) =>
+  const { data } = useSWR<Projects | { error: unknown }>(
+    [
+      getProjectsUrl(
+        typeof router.query.slug === 'string' ? router.query.slug : ''
+      ),
+      authInfo?.storeDoc?.data()?.vercelToken
+    ],
+    (url: string, token: string | undefined) =>
       fetch(url, {
         headers: {
-          Authorization: `Bearer ${authInfo?.storeDoc?.data()?.vercelToken}`
+          Authorization: `Bearer ${token}`
         }
       }).then((res) => res.json()),
     config
   )
 
-  return data
+  return Array.isArray(data) ? data : []
 }
 
 const getProjectsUrl = (slug: string) => `${ENDPOINTS.projects}?slug=${slug}`

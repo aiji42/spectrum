@@ -11,6 +11,7 @@ import { deploySplitTest } from '@/libs/client-side'
 import { Project, SplitFormAction, Splits, Team } from '@/types'
 import { isControllableDeploy } from '@/utils'
 import equal from 'fast-deep-equal'
+import { snackbar } from 'tailwind-toast'
 
 const reducer = (state: Splits, action: SplitFormAction) => {
   const newState = { ...state }
@@ -79,13 +80,48 @@ export const useSplitTestCard: UseSplitTestsCard = ({
   }, [splits])
 
   const handleDeploy = useCallback(() => {
-    deploySplitTest(project, team, currentSplits).finally(() => {
-      router.reload()
-    })
+    deploySplitTest(project, team, currentSplits)
+      .then((res) => {
+        if (res.ok) {
+          setTimeout(router.reload, 5000)
+          successToast('Please wait until deployment is complete.')
+          return
+        }
+        res.json().then((data: { message: string }) => errorToast(data.message))
+      })
+      .catch((e) => errorToast(e.message))
   }, [currentSplits, project, router, team])
 
   return [
     { editingKey, currentSplits, deployable, controllable },
     { handleClose, handleCreate, handleEdit, handleDeploy, formDispatch }
   ]
+}
+
+const errorToast = (error: string) => {
+  snackbar()
+    .default('Error:', error)
+    .with({
+      duration: 10000,
+      positionY: 'top',
+      shape: 'square',
+      color: 'bg-red-600',
+      fontTone: '50',
+      fontColor: 'gray'
+    })
+    .show()
+}
+
+const successToast = (message: string) => {
+  snackbar()
+    .default('Success:', message)
+    .with({
+      duration: 10000,
+      positionY: 'top',
+      shape: 'square',
+      color: 'bg-green-500',
+      fontTone: '50',
+      fontColor: 'gray'
+    })
+    .show()
 }

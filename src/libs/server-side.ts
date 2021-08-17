@@ -18,7 +18,7 @@ if (!firebaseAdmin.apps.length && process.env.FIREBASE_SERVICE_ACCOUNT_KEY) {
   })
 }
 
-const authedHeaders = (token: string) => ({
+export const authedHeaders = (token: string): { Authorization: string } => ({
   Authorization: `Bearer ${token}`
 })
 
@@ -54,7 +54,9 @@ export const fetchProjects = async (
   }).then((res) => res.json())
 }
 
-const getToken = async (ctx: GetServerSidePropsContext): Promise<string> => {
+export const getToken = async (
+  ctx: Pick<GetServerSidePropsContext, 'req'>
+): Promise<string> => {
   const cookies = nookies.get(ctx)
   const token = cookies[FIREBASE_COOKIE_KEY]
   const firebaseUser = await firebaseAdmin.auth().verifyIdToken(token)
@@ -65,10 +67,7 @@ const getToken = async (ctx: GetServerSidePropsContext): Promise<string> => {
     .doc(firebaseUser.uid)
     .get()
 
-  if (!doc.exists) {
-    // TODO
-    throw new Error()
-  }
+  if (!doc.exists) throw new Error('Could not get token.')
 
   return doc.data()?.vercelToken ?? ''
 }

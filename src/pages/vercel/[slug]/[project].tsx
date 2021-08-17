@@ -1,4 +1,4 @@
-import { VFC } from 'react'
+import { VFC, useEffect } from 'react'
 import { Popover } from '@headlessui/react'
 import { GetServerSideProps } from 'next'
 import { Header } from '@/components/Header'

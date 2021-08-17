@@ -1,24 +1,29 @@
 import { NextApiHandler } from 'next'
+import { authedHeaders, getToken } from '@/libs/server-side'
+import { ENDPOINTS } from '@/endpoints'
 
 const handler: NextApiHandler = async (req, res) => {
   if (!['POST', 'PATCH'].includes(req.method ?? '')) {
     res.status(400).end()
     return
   }
+  const token = await getToken({ req })
   const { projectId, splits, teamId, envId, webhook } = req.body
-  if (!projectId || !splits || !webhook) {
+  if (!projectId || !splits || !webhook || !token) {
     res.status(400).end()
     return
   }
 
-  const url = `https://api.vercel.com/v8/projects/${projectId}/env/${
-    envId ?? ''
-  }${teamId ? `?teamId=${teamId}` : ''}`
+  const isCreate = !envId
+  const url = isCreate
+    ? ENDPOINTS.environments(projectId)
+    : ENDPOINTS.environment(projectId, envId) +
+      (teamId ? `?teamId=${teamId}` : '')
 
   let response = await fetch(url, {
-    method: envId ? 'PATCH' : 'POST',
+    method: isCreate ? 'POST' : 'PATCH',
     headers: {
-      Authorization: `Bearer ${process.env.NEXT_PUBLIC_VERCEL_API_TOKEN}`,
+      ...authedHeaders(token),
       'Content-Type': 'application/json'
     },
     body: JSON.stringify({
@@ -31,7 +36,7 @@ const handler: NextApiHandler = async (req, res) => {
   if (!response.ok) {
     const error = await response.json()
     console.log(error)
-    res.status(500).json({
+    await res.status(500).json({
       message: error
     })
     res.end()
@@ -43,7 +48,7 @@ const handler: NextApiHandler = async (req, res) => {
   if (!response.ok) {
     const error = await response.json()
     console.log(error)
-    res.status(500).json({
+    await res.status(500).json({
       message: error
     })
     res.end()
