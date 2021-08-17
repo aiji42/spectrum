@@ -1,4 +1,4 @@
-import { VFC, useEffect } from 'react'
+import { VFC } from 'react'
 import { Popover } from '@headlessui/react'
 import { GetServerSideProps } from 'next'
 import { Header } from '@/components/Header'
@@ -11,6 +11,14 @@ import { getSplitEnvFromProject } from '@/utils'
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const { query } = ctx
   const { user, teams } = await fetchUserAndTeams(ctx)
+
+  if (!user || !teams)
+    return {
+      redirect: {
+        destination: '/setting',
+        statusCode: 302
+      }
+    }
 
   const team = teams.find(({ slug }) => slug === query.slug) ?? null
   if (!team && user.username !== query.slug)

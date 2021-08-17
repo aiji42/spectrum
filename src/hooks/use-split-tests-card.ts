@@ -11,7 +11,7 @@ import { deploySplitTest } from '@/libs/client-side'
 import { Project, SplitFormAction, Splits, Team } from '@/types'
 import { isControllableDeploy } from '@/utils'
 import equal from 'fast-deep-equal'
-import { snackbar } from 'tailwind-toast'
+import Toast from 'tailwind-toast'
 
 const reducer = (state: Splits, action: SplitFormAction) => {
   const newState = { ...state }
@@ -99,7 +99,7 @@ export const useSplitTestCard: UseSplitTestsCard = ({
 }
 
 const errorToast = (error: string) => {
-  snackbar()
+  Toast.snackbar()
     .default('Error:', error)
     .with({
       duration: 10000,
@@ -113,7 +113,7 @@ const errorToast = (error: string) => {
 }
 
 const successToast = (message: string) => {
-  snackbar()
+  Toast.snackbar()
     .default('Success:', message)
     .with({
       duration: 10000,

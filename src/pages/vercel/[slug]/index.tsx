@@ -11,6 +11,14 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const { query } = ctx
   const { user, teams } = await fetchUserAndTeams(ctx)
 
+  if (!user || !teams)
+    return {
+      redirect: {
+        destination: '/setting',
+        statusCode: 302
+      }
+    }
+
   const team = teams.find(({ slug }) => slug === query.slug)
   if (!team && user.username !== query.slug)
     return {

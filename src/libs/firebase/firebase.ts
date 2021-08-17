@@ -22,6 +22,7 @@ export const Login = (): void => {
     .auth()
     .signInWithPopup(provider)
     .then((result) => {
+      window.location.href = '/vercel/_dummy'
       return result
     })
     .catch((error) => {

@@ -25,8 +25,8 @@ export const authedHeaders = (token: string): { Authorization: string } => ({
 export const fetchUserAndTeams = async (
   ctx: GetServerSidePropsContext
 ): Promise<{
-  user: User
-  teams: Teams
+  user: User | undefined
+  teams: Teams | undefined
 }> => {
   const token = await getToken(ctx)
 

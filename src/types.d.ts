@@ -71,3 +71,7 @@ export type SplitFormAction =
       type: 'RELOAD'
       data: Splits
     }
+
+export type FirestoreDocumentData = {
+  vercelToken: string | null
+}

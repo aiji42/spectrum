@@ -1,21 +1,14 @@
 import { VFC } from 'react'
-import { auth, Login, Logout } from '@/libs/firebase/firebase'
+import { Header } from '@/components/Header'
+import { Popover } from '@headlessui/react'
 
 const Home: VFC = () => {
   return (
-    <>
-      {!auth.currentUser ? (
-        <button onClick={() => Login()}>
-          <h2>Login</h2>
-          <p>You are Not logged in.</p>
-        </button>
-      ) : (
-        <button onClick={() => Logout()}>
-          <h2>Logout</h2>
-          <p>You are logged in.</p>
-        </button>
-      )}
-    </>
+    <Popover className="relative bg-white">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6">
+        <Header teams={[]} projects={[]} />
+      </div>
+    </Popover>
   )
 }
 
