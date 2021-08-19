@@ -156,6 +156,7 @@ export const InstallSteps: VFC = () => {
                   alt="sample code"
                   width={886}
                   height={364}
+                  quality={100}
                 />
               </div>
             </div>
