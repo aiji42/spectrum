@@ -11,7 +11,7 @@ import { deploySplitTest } from '@/libs/client-side'
 import { Project, SplitFormAction, Splits, Team } from '@/types'
 import { isControllableDeploy } from '@/utils'
 import equal from 'fast-deep-equal'
-import Toast from 'tailwind-toast'
+import { useSnackbar } from '@/components/Snackbar'
 
 const reducer = (state: Splits, action: SplitFormAction) => {
   const newState = { ...state }
@@ -79,49 +79,47 @@ export const useSplitTestCard: UseSplitTestsCard = ({
     formDispatch({ type: 'RELOAD', data: splits })
   }, [splits])
 
+  const showSnackbar = useSnackbar()
   const handleDeploy = useCallback(() => {
     deploySplitTest(project, team, currentSplits)
       .then((res) => {
         if (res.ok) {
-          setTimeout(router.reload, 5000)
-          successToast('Please wait until deployment is complete.')
+          showSnackbar(
+            {
+              type: 'success',
+              label: 'Success:',
+              text: 'Please wait until deployment is complete.'
+            },
+            5000
+          ).then(router.reload)
           return
         }
-        res.json().then((data: { message: string }) => errorToast(data.message))
+
+        res.json().then((data: { message: string }) =>
+          showSnackbar(
+            {
+              type: 'alert',
+              label: 'Error:',
+              text: data.message
+            },
+            10000
+          )
+        )
       })
-      .catch((e) => errorToast(e.message))
+      .catch((e) =>
+        showSnackbar(
+          {
+            type: 'alert',
+            label: 'Error:',
+            text: e.message
+          },
+          10000
+        )
+      )
   }, [currentSplits, project, router, team])
 
   return [
     { editingKey, currentSplits, deployable, controllable },
     { handleClose, handleCreate, handleEdit, handleDeploy, formDispatch }
   ]
-}
-
-const errorToast = (error: string) => {
-  Toast.snackbar()
-    .default('Error:', error)
-    .with({
-      duration: 10000,
-      positionY: 'top',
-      shape: 'square',
-      color: 'bg-red-600',
-      fontTone: '50',
-      fontColor: 'gray'
-    })
-    .show()
-}
-
-const successToast = (message: string) => {
-  Toast.snackbar()
-    .default('Success:', message)
-    .with({
-      duration: 10000,
-      positionY: 'top',
-      shape: 'square',
-      color: 'bg-green-500',
-      fontTone: '50',
-      fontColor: 'gray'
-    })
-    .show()
 }

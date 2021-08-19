@@ -1,43 +1,16 @@
 import { useContext, VFC } from 'react'
 import { ExternalLinkIcon } from '@heroicons/react/outline'
-import Toast from 'tailwind-toast'
 import { useRouter } from 'next/router'
 import AuthContext from '@/libs/firebase/AuthContext'
 import { FirestoreDocumentData } from '@/types'
 import { useForm } from 'react-hook-form'
 import { Logout } from '@/libs/firebase/firebase'
-
-const errorToast = (error: string) => {
-  Toast.snackbar()
-    .default('Error:', error)
-    .with({
-      duration: 10000,
-      positionY: 'top',
-      shape: 'square',
-      color: 'bg-red-600',
-      fontTone: '50',
-      fontColor: 'gray'
-    })
-    .show()
-}
-
-const successToast = (message: string) => {
-  Toast.snackbar()
-    .default('Success:', message)
-    .with({
-      duration: 5000,
-      positionY: 'top',
-      shape: 'square',
-      color: 'bg-green-500',
-      fontTone: '50',
-      fontColor: 'gray'
-    })
-    .show()
-}
+import { useSnackbar } from '@/components/Snackbar'
 
 export const SettingForm: VFC = () => {
   const authInfo = useContext(AuthContext)
   const router = useRouter()
+  const showSnackbar = useSnackbar()
 
   const { register, handleSubmit: _handleSubmit } =
     useForm<FirestoreDocumentData>()
@@ -45,11 +18,13 @@ export const SettingForm: VFC = () => {
     authInfo?.storeDoc.ref
       .set(data)
       .then(() => {
-        setTimeout(() => router.push('/vercel/_dummy'), 2000)
-        successToast('Updated the token.')
+        showSnackbar(
+          { type: 'success', label: 'Success:', text: 'Updated the token.' },
+          2000
+        ).then(() => router.push('/vercel/_dummy'))
       })
       .catch((e) => {
-        errorToast(e.message)
+        showSnackbar({ type: 'alert', label: 'Error:', text: e.message }, 10000)
       })
   })
 

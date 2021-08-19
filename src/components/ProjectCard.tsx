@@ -33,7 +33,15 @@ export const ProjectCard: VFC<Props> = (props) => {
             <dt className="text-sm font-medium text-gray-500">Status</dt>
             <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
               <span
-                className={statusColor(project.targets.production.readyState)}
+                className={
+                  project.targets.production.readyState === 'READY'
+                    ? 'text-green-600'
+                    : project.targets.production.readyState === 'ERROR'
+                    ? 'text-red-600'
+                    : project.targets.production.readyState === 'BUILDING'
+                    ? 'text-yellow-600'
+                    : 'text-gray-600'
+                }
               >
                 {project.targets.production.readyState}
               </span>
@@ -61,9 +69,11 @@ export const ProjectCard: VFC<Props> = (props) => {
             </dt>
             <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
               <span
-                className={`text-${
-                  isControllableDeploy(project) ? 'green' : 'red'
-                }-600`}
+                className={`${
+                  isControllableDeploy(project)
+                    ? 'text-green-600'
+                    : 'text-red-600'
+                }`}
               >
                 {isControllableDeploy(project) ? 'YES' : 'NO'}
               </span>
@@ -165,18 +175,4 @@ export const ProjectCard: VFC<Props> = (props) => {
       </Transition.Root>
     </div>
   )
-}
-
-const statusColor = (
-  status: Project['targets']['production']['readyState']
-) => {
-  return `text-${
-    status === 'READY'
-      ? 'green'
-      : status === 'ERROR'
-      ? 'red'
-      : status === 'BUILDING'
-      ? 'yellow'
-      : 'read'
-  }-600`
 }

@@ -4535,11 +4535,6 @@ table@^6.0.9:
     string-width "^4.2.0"
     strip-ansi "^6.0.0"
 
-tailwind-toast@^1.1.0:
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/tailwind-toast/-/tailwind-toast-1.1.0.tgz#42cfa5bd03ea14e48993b3da6cc4d0d30d885b27"
-  integrity sha512-f4Ok+fZIWj0pjkgoc5BXtUVB90KCMSiY5ffq1bC2csqzR+5lALUhmPvpZPGjoe/OtkL3MqTkaWPgqzLDI6/LMw==
-
 tailwindcss@^2.2.7:
   version "2.2.7"
   resolved "https://registry.yarnpkg.com/tailwindcss/-/tailwindcss-2.2.7.tgz#795d07a14ef46c2dc4a1610f7f906f697daaf731"
