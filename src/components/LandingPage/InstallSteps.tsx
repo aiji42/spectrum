@@ -33,6 +33,7 @@ export const InstallSteps: VFC = () => {
                 </div>
               </div>
               <div className="md:w-96 w-full p-5">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src="https://image.flaticon.com/icons/svg/1330/1330216.svg"
                   alt="step 1"
@@ -195,6 +196,7 @@ export const InstallSteps: VFC = () => {
                 </div>
               </div>
               <div className="md:w-96 w-full p-5">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src="https://image.flaticon.com/icons/svg/1330/1330216.svg"
                   alt="step 4"
