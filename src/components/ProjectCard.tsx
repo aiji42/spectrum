@@ -139,7 +139,7 @@ export const ProjectCard: VFC<Props> = (props) => {
                   </Dialog.Title>
                   <div className="mt-2">
                     <p className="mt-1 max-w-2xl text-sm text-gray-500">
-                      Spectrum will deploy to start or update for split tests,
+                      Spectrum must deploy to start or update for split tests,
                       so please follow the steps below to register your web hook
                       in Vercel.
                     </p>
