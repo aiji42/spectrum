@@ -67,7 +67,7 @@ export const SplitForm: VFC<Props> = ({ dispatch, editingKey, splitsData }) => {
           as="h3"
           className="text-lg leading-6 font-medium text-gray-900"
         >
-          Split Tests
+          A/B Tests
         </Dialog.Title>
         <div className="mt-2">
           <label className="block text-sm font-medium text-gray-700 mt-4">
@@ -165,7 +165,7 @@ export const SplitForm: VFC<Props> = ({ dispatch, editingKey, splitsData }) => {
             </div>
           </label>
           <label className="block text-sm font-medium text-gray-700 mt-4">
-            Split sticky max age (cookie max-age seconds)
+            Sticky max age (cookie max-age seconds)
             <div className="mt-1 relative rounded-md shadow-sm">
               <input
                 {...register('cookie.maxAge', { required: true, min: 1 })}

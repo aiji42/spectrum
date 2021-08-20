@@ -140,7 +140,7 @@ export const ProjectCard: VFC<Props> = (props) => {
                   <div className="mt-2">
                     <p className="mt-1 max-w-2xl text-sm text-gray-500">
                       Spectrum must deploy to start or update for split tests,
-                      so please follow the steps below to register your web hook
+                      so please follow the steps below to register your webhook
                       in Vercel.
                     </p>
                     <Image
@@ -154,9 +154,12 @@ export const ProjectCard: VFC<Props> = (props) => {
                       <b>Deploy Hooks</b>
                     </p>
                     <p className="mt-1 max-w-2xl text-sm text-gray-500">
-                      Name must be &quot;<b>for-spectrum</b>&quot; and branch
-                      must be the same as the value registered in the production
-                      deployment (e.g. main).
+                      Name must be{' '}
+                      <span className="bg-gray-100 text-red-400 p-1">
+                        for-spectrum
+                      </span>{' '}
+                      and branch must be the same as the value registered in the
+                      production deployment (e.g. main).
                     </p>
                   </div>
                 </div>

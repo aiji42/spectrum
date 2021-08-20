@@ -20,7 +20,7 @@ export const SplitTestsCard: VFC<Props> = ({ project, team, splits }) => {
     <div className="shadow-md sm:rounded-lg">
       <div className="flex items-center justify-between bg-gradient-to-r from-indigo-400 to-indigo-500 px-5 py-4 sm:rounded-t-lg">
         <div className="flex-1 min-w-0">
-          <h3 className="text-white text-xl sm:truncate">Split Tests</h3>
+          <h3 className="text-white text-xl sm:truncate">A/B Tests</h3>
         </div>
         {status.deployable && (
           <span className="ml-3">
@@ -37,7 +37,7 @@ export const SplitTestsCard: VFC<Props> = ({ project, team, splits }) => {
       </div>
       {Object.keys(status.currentSplits).length < 1 && (
         <p className="text-center text-gray-500 mt-6 text-lg">
-          Split Tests are not exist.
+          A/B Tests are not exist.
         </p>
       )}
       {Object.entries(status.currentSplits).map(([key, split]) => (
@@ -83,7 +83,7 @@ export const SplitTestsCard: VFC<Props> = ({ project, team, splits }) => {
           disabled={!status.controllable}
         >
           <PlusCircleIcon className="-ml-1 mr-2 h-5 w-5" aria-hidden="true" />
-          Add Split Test
+          Add A/B Test
         </button>
       </div>
       <Transition.Root show={isEditing} as={Fragment}>

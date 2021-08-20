@@ -233,7 +233,7 @@ export const InstallSteps: VFC = () => {
                 <div className="px-4 pb-6">
                   Setup is complete! You can start, stop, and change your A/B
                   test at any time through this Spectrum. Let&apos;s start the
-                  A/B immediately.
+                  A/B test immediately.
                 </div>
               </div>
               <div className="px-16">
