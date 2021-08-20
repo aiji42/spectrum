@@ -16,8 +16,7 @@ export const HeroHome: VFC = () => {
               <p className="text-xl text-gray-600 mb-8">
                 If you&apos;re using Next.js and Vercel to create your website,
                 you can&apos;t afford not to use this service. This Spectrum
-                assists you in your activities by speedily deploying split
-                tests.
+                assists you in your activities by speedily deploying A/B tests.
               </p>
             </div>
           </div>
