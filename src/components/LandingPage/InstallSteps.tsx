@@ -19,25 +19,25 @@ export const InstallSteps: VFC = () => {
           </div>
           <div className="flex-auto border rounded  border-gray-300">
             <div className="flex md:flex-row flex-col items-center">
-              <div className="flex-auto">
+              <div className="flex-1">
                 <div className="md:hidden text-sm font-normal pt-3 pl-3 text-gray-500">
                   <span className="font-black　uppercase">Step 1</span> - on
                   Vercel
                 </div>
-                <div className="p-3 text-3xl text-gray-800 font">
+                <div className="p-4 text-3xl bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-green-400 font-medium">
                   Get an API token.
                 </div>
-                <div className="px-3 pb-6">
+                <div className="px-4 pb-6">
                   From the Vercel web console, go to <b>Settings</b> &gt;{' '}
                   <b>Tokens</b> to generate a token.
                 </div>
               </div>
-              <div className="md:w-96 w-full p-5">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src="https://image.flaticon.com/icons/svg/1330/1330216.svg"
-                  alt="step 1"
-                  className="object-scale-down"
+              <div className="flex-1">
+                <Image
+                  src="/sample-token.png"
+                  alt="create token"
+                  width={1019}
+                  height={442}
                 />
               </div>
             </div>
@@ -71,8 +71,8 @@ export const InstallSteps: VFC = () => {
                   <span className="font-black uppercase">Step 2</span> - on
                   Vercel
                 </div>
-                <div className="p-4 text-3xl text-gray-800 font">
-                  Enable Webhook for your projects.
+                <div className="p-4 text-3xl bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-green-400 font-medium">
+                  Enable a webhook for your projects.
                 </div>
                 <div className="px-4 pb-6">
                   <p>
@@ -132,7 +132,7 @@ export const InstallSteps: VFC = () => {
                   <span className="font-black uppercase">Step 3</span> - on your
                   project code
                 </div>
-                <div className="p-4 text-3xl text-gray-800 font">
+                <div className="p-4 text-3xl bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-green-400 font-medium">
                   Change the next.config.js.
                 </div>
                 <div className="px-4 pb-6">
@@ -185,7 +185,7 @@ export const InstallSteps: VFC = () => {
                 <div className="md:hidden text-sm font-normal uppercase pt-3 pl-3 text-gray-500">
                   <span className="font-black">Step 4</span> - Implementation
                 </div>
-                <div className="p-3 text-3xl text-gray-800 font">
+                <div className="p-4 text-3xl bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-green-400 font-medium">
                   Execute, impletement your solution
                 </div>
                 <div className="px-3 pb-6">
