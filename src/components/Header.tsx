@@ -42,14 +42,16 @@ export const Header: VFC<Props> = ({
     <div className="flex items-center border-b-2 border-gray-100 py-4 justify-start space-x-10">
       <div className="flex-1 justify-start lg:w-0">
         <div className="h-10 w-auto">
-          <Image
-            src="/prism.svg"
-            alt="logo"
-            height={44}
-            width={61}
-            quality={100}
-            priority
-          />
+          <Link href="/">
+            <Image
+              src="/prism.svg"
+              alt="logo"
+              height={44}
+              width={61}
+              quality={100}
+              priority
+            />
+          </Link>
         </div>
       </div>
       <Popover.Group as="nav" className="flex space-x-10">
