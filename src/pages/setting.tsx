@@ -7,21 +7,21 @@ import { fetchUserAndTeams } from '@/libs/server-side'
 import { Projects, Teams, User } from '@/types'
 
 export const getServerSideProps: GetServerSideProps<Props> = async (ctx) => {
-  const { user, teams } = await fetchUserAndTeams(ctx)
-
-  if (!user)
+  try {
+    const { user, teams } = await fetchUserAndTeams(ctx)
     return {
       props: {
+        user,
         teams: teams ?? [],
         projects: []
       }
     }
-
-  return {
-    props: {
-      user,
-      teams: teams ?? [],
-      projects: []
+  } catch (_) {
+    return {
+      props: {
+        teams: [],
+        projects: []
+      }
     }
   }
 }
