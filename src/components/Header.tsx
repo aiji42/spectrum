@@ -41,14 +41,14 @@ export const Header: VFC<Props> = ({
   return (
     <div className="flex items-center border-b-2 border-gray-100 py-4 justify-start space-x-10">
       <div className="flex-1 justify-start lg:w-0">
-        <div className="h-10 w-auto">
+        <div className="h-10 w-auto sm:pl-4">
           <Link href="/">
             <a>
               <Image
                 src="/logo.svg"
                 alt="logo"
-                height={44}
-                width={61}
+                height={40}
+                width={40}
                 quality={100}
                 priority
               />
