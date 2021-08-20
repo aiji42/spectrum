@@ -199,14 +199,6 @@ export const InstallSteps: VFC = () => {
                   previous step.
                 </div>
               </div>
-              <div className="flex-1">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src="https://image.flaticon.com/icons/svg/1330/1330216.svg"
-                  alt="step 4"
-                  className="object-scale-down"
-                />
-              </div>
             </div>
           </div>
         </div>
@@ -231,7 +223,7 @@ export const InstallSteps: VFC = () => {
           </div>
           <div className="flex-auto border rounded  border-green-300">
             <div className="flex md:flex-row flex-col items-center">
-              <div className="flex-1">
+              <div className="flex-auto">
                 <div className="md:hidden text-sm font-normal pt-3 pl-3 text-gray-500">
                   <span className="font-black　uppercase">Goal</span> - Spectrum
                 </div>
@@ -243,6 +235,14 @@ export const InstallSteps: VFC = () => {
                   test at any time through this Spectrum. Let&apos;s start the
                   A/B immediately.
                 </div>
+              </div>
+              <div className="px-16">
+                <Image
+                  src="/party-popper.svg"
+                  alt="congratulations"
+                  width={100}
+                  height={100}
+                />
               </div>
             </div>
           </div>
