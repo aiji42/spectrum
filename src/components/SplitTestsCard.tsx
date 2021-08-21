@@ -37,7 +37,7 @@ export const SplitTestsCard: VFC<Props> = ({ project, team, splits }) => {
       </div>
       {Object.keys(status.currentSplits).length < 1 && (
         <p className="text-center text-gray-500 mt-6 text-lg">
-          A/B Tests are not exist.
+          Tests are not exist.
         </p>
       )}
       {Object.entries(status.currentSplits).map(([key, split]) => (
@@ -83,7 +83,7 @@ export const SplitTestsCard: VFC<Props> = ({ project, team, splits }) => {
           disabled={!status.controllable}
         >
           <PlusCircleIcon className="-ml-1 mr-2 h-5 w-5" aria-hidden="true" />
-          Add A/B Test
+          Add
         </button>
       </div>
       <Transition.Root show={isEditing} as={Fragment}>

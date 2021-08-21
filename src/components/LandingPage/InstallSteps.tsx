@@ -187,7 +187,7 @@ export const InstallSteps: VFC = () => {
             <div className="flex md:flex-row flex-col items-center">
               <div className="flex-1">
                 <div className="md:hidden text-sm font-normal pt-3 pl-3 text-gray-500">
-                  <span className="font-black uppercase">Step 4</span> - on
+                  <span className="font-black uppercase">Step 4</span> -
                   Spectrum
                 </div>
                 <div className="p-4 text-3xl bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-green-400 font-medium">
