@@ -47,11 +47,11 @@ export const InstallSteps: VFC = () => {
                   Vercel.
                 </div>
               </div>
-              <div className="flex-1 p-3">
+              <div className="flex-1 pb-3 sm:p-3">
                 <SyntaxHighlighter
                   language="javascript"
                   style={darcula}
-                  wrapLines
+                  customStyle={{ overflow: 'scroll', maxWidth: '90vw' }}
                 >
                   {`// next.config.js
 
