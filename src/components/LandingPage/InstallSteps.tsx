@@ -1,5 +1,8 @@
 import { VFC } from 'react'
 import Image from 'next/image'
+import { ExternalLinkIcon } from '@heroicons/react/outline'
+import SyntaxHighlighter from 'react-syntax-highlighter'
+import darcula from 'react-syntax-highlighter/dist/cjs/styles/hljs/darcula'
 
 export const InstallSteps: VFC = () => {
   return (
@@ -44,14 +47,21 @@ export const InstallSteps: VFC = () => {
                   Vercel.
                 </div>
               </div>
-              <div className="flex-1">
-                <Image
-                  src="/sample-code.svg"
-                  alt="sample code"
-                  width={886}
-                  height={364}
-                  quality={100}
-                />
+              <div className="flex-1 p-3">
+                <SyntaxHighlighter
+                  language="javascript"
+                  style={darcula}
+                  wrapLines
+                >
+                  {`// next.config.js
+
+// yarn add next-with-split or npm install next-with-split 
+const withSplit = require('next-with-split')({})
+
+module.export = withSplit({
+  // write your next.js configuration values.
+})`}
+                </SyntaxHighlighter>
               </div>
             </div>
           </div>
@@ -102,6 +112,13 @@ export const InstallSteps: VFC = () => {
                     </span>{' '}
                     and branch must be the same as the value registered in the
                     production deployment (e.g. main).
+                    <a
+                      href="https://vercel.com/account/tokens"
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      <ExternalLinkIcon className="ml-2 inline-block w-4 h-4 text-indigo-500 hover:text-indigo-600" />
+                    </a>
                   </p>
                 </div>
               </div>
