@@ -1,7 +1,5 @@
 import { VFC } from 'react'
-import { Popover } from '@headlessui/react'
 import { GetServerSideProps } from 'next'
-import { Header } from '@/components/Header'
 import { fetchProjects, fetchUserAndTeams } from '@/libs/server-side'
 import { Projects, Teams, User } from '@/types'
 import { ProjectTitleCard } from '@/components/ProjectTitleCard'
@@ -49,22 +47,17 @@ type Props = {
 
 const Home: VFC<Props> = (props) => {
   return (
-    <Popover className="relative bg-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6">
-        <Header {...props} />
-        <div className="mt-8">
-          {props.projects.map((pjt) => (
-            <div key={pjt.id} className="mt-2">
-              <Link href={`/vercel/${props.slug}/${pjt.name}`}>
-                <a>
-                  <ProjectTitleCard project={pjt} />
-                </a>
-              </Link>
-            </div>
-          ))}
+    <div className="mt-8">
+      {props.projects.map((pjt) => (
+        <div key={pjt.id} className="mt-2">
+          <Link href={`/vercel/${props.slug}/${pjt.name}`}>
+            <a>
+              <ProjectTitleCard project={pjt} />
+            </a>
+          </Link>
         </div>
-      </div>
-    </Popover>
+      ))}
+    </div>
   )
 }
 

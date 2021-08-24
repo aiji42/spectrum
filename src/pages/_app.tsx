@@ -11,6 +11,9 @@ import firebase from 'firebase/app'
 import { useFortressWithFirebase } from 'next-fortress/build/client'
 import Head from 'next/head'
 import { Snackbar, SnackbarController } from '@/components/Snackbar'
+import { Header } from '@/components/Header'
+import { Footer } from '@/components/Footer'
+import { Popover } from '@headlessui/react'
 
 nprogress.configure({ showSpinner: false, speed: 400, minimum: 0.25 })
 
@@ -40,10 +43,16 @@ const MyApp: VFC<AppProps> = ({ Component, pageProps }) => {
         <Head>
           <title>Spectrum</title>
         </Head>
-        <div className="relative">
-          <Component {...pageProps} />
-          <Snackbar />
-        </div>
+        <Popover className="relative bg-white">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 flex flex-col min-h-screen">
+            <Header {...pageProps} />
+            <div className="flex-1">
+              <Component {...pageProps} />
+            </div>
+            <Snackbar />
+            <Footer />
+          </div>
+        </Popover>
       </SnackbarController>
     </AuthContext.Provider>
   )

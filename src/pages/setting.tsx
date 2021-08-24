@@ -1,6 +1,4 @@
 import { VFC } from 'react'
-import { Header } from '@/components/Header'
-import { Popover } from '@headlessui/react'
 import { SettingForm } from '@/components/SettingForm'
 import { GetServerSideProps } from 'next'
 import { fetchUserAndTeams } from '@/libs/server-side'
@@ -32,17 +30,11 @@ type Props = {
   projects: Projects
 }
 
-const Setting: VFC<Props> = (props) => {
+const Setting: VFC<Props> = () => {
   return (
-    <Popover className="relative bg-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6">
-        <Header {...props} />
-
-        <div className="mt-8">
-          <SettingForm />
-        </div>
-      </div>
-    </Popover>
+    <div className="mt-8">
+      <SettingForm />
+    </div>
   )
 }
 

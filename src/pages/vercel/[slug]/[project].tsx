@@ -1,7 +1,5 @@
 import { VFC } from 'react'
-import { Popover } from '@headlessui/react'
 import { GetServerSideProps } from 'next'
-import { Header } from '@/components/Header'
 import { ProjectCard } from '@/components/ProjectCard'
 import { SplitTestsCard } from '@/components/SplitTestsCard'
 import { fetchProjects, fetchUserAndTeams } from '@/libs/server-side'
@@ -68,17 +66,12 @@ type Props = {
 const Home: VFC<Props> = (props) => {
   return (
     <>
-      <Popover className="relative bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6">
-          <Header {...props} />
-          <div className="mt-8">
-            <ProjectCard {...props} />
-          </div>
-          <div className="mt-8">
-            <SplitTestsCard {...props} />
-          </div>
-        </div>
-      </Popover>
+      <div className="mt-8">
+        <ProjectCard {...props} />
+      </div>
+      <div className="mt-8">
+        <SplitTestsCard {...props} />
+      </div>
     </>
   )
 }
