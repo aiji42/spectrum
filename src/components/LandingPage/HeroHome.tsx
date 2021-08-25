@@ -9,7 +9,7 @@ export const HeroHome: VFC = () => {
             <h1 className="text-6xl text-gray-800 md:text-8xl font-extrabold leading-tighter tracking-tighter mb-4">
               Make your website{' '}
               <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-green-400">
-                wonderful
+                powerful
               </span>
             </h1>
             <div className="max-w-3xl mx-auto">
