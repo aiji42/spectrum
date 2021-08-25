@@ -1,4 +1,4 @@
-import { Dispatch, useEffect, useMemo, useRef, useState, VFC } from 'react'
+import { Dispatch, useEffect, useMemo, useState, VFC } from 'react'
 import { Dialog } from '@headlessui/react'
 import { useForm } from 'react-hook-form'
 import { Splits, SplitFormAction, Project, Team, Deployments } from '@/types'
@@ -64,6 +64,9 @@ export const SplitForm: VFC<Props> = (props) => {
     }
   }, [editingKey, splitsData])
 
+  const [openPanelOriginal, setOpenPanelOriginal] = useState(false)
+  const [openPanelChallenger, setOpenPanelChallenger] = useState(false)
+
   return (
     <form onSubmit={onSubmit}>
       <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
@@ -83,6 +86,10 @@ export const SplitForm: VFC<Props> = (props) => {
                 className="focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md placeholder-gray-400"
                 placeholder="test1"
                 defaultValue={data.name}
+                onFocus={() => {
+                  setOpenPanelOriginal(false)
+                  setOpenPanelChallenger(false)
+                }}
               />
             </div>
           </label>
@@ -95,6 +102,10 @@ export const SplitForm: VFC<Props> = (props) => {
                 className="focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md placeholder-gray-400"
                 placeholder="/foo/bar"
                 defaultValue={data.path}
+                onFocus={() => {
+                  setOpenPanelOriginal(false)
+                  setOpenPanelChallenger(false)
+                }}
               />
             </div>
           </label>
@@ -107,6 +118,10 @@ export const SplitForm: VFC<Props> = (props) => {
                 className="focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md placeholder-gray-400"
                 placeholder="main"
                 defaultValue={data.originalBranch}
+                onFocus={() => {
+                  setOpenPanelOriginal(false)
+                  setOpenPanelChallenger(false)
+                }}
               />
             </div>
           </label>
@@ -119,8 +134,13 @@ export const SplitForm: VFC<Props> = (props) => {
                 className="focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md placeholder-gray-400"
                 placeholder="original.example.com"
                 defaultValue={data.originalHost}
+                onFocus={() => {
+                  setOpenPanelOriginal(true)
+                  setOpenPanelChallenger(false)
+                }}
               />
             </div>
+            {openPanelOriginal && <DeploymentsPanel {...props} />}
           </label>
           <label className="block text-sm font-medium text-gray-700 mt-4">
             Challenger branch
@@ -131,6 +151,10 @@ export const SplitForm: VFC<Props> = (props) => {
                 className="focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md placeholder-gray-400"
                 placeholder="challenger"
                 defaultValue={data.challengerBranch}
+                onFocus={() => {
+                  setOpenPanelOriginal(false)
+                  setOpenPanelChallenger(false)
+                }}
               />
             </div>
           </label>
@@ -143,9 +167,13 @@ export const SplitForm: VFC<Props> = (props) => {
                 className="focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md placeholder-gray-400"
                 placeholder="challenger.example.com"
                 defaultValue={data.challengerHost}
+                onFocus={() => {
+                  setOpenPanelOriginal(false)
+                  setOpenPanelChallenger(true)
+                }}
               />
             </div>
-            <DeploymentsPanel {...props} />
+            {openPanelChallenger && <DeploymentsPanel {...props} />}
           </label>
           <label className="block text-sm font-medium text-gray-700 mt-4">
             Allocate weight for original
@@ -155,6 +183,10 @@ export const SplitForm: VFC<Props> = (props) => {
                 type="number"
                 className="focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md placeholder-gray-400"
                 defaultValue={data.originalWeight}
+                onFocus={() => {
+                  setOpenPanelOriginal(false)
+                  setOpenPanelChallenger(false)
+                }}
               />
             </div>
           </label>
@@ -166,6 +198,10 @@ export const SplitForm: VFC<Props> = (props) => {
                 type="number"
                 className="focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md placeholder-gray-400"
                 defaultValue={data.challengerWeight}
+                onFocus={() => {
+                  setOpenPanelOriginal(false)
+                  setOpenPanelChallenger(false)
+                }}
               />
             </div>
           </label>
@@ -177,6 +213,10 @@ export const SplitForm: VFC<Props> = (props) => {
                 type="number"
                 className="focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md placeholder-gray-400"
                 defaultValue={data.cookieMaxAge}
+                onFocus={() => {
+                  setOpenPanelOriginal(false)
+                  setOpenPanelChallenger(false)
+                }}
               />
             </div>
           </label>
@@ -217,22 +257,39 @@ const DeploymentsPanel: VFC<Props> = ({ team, project }) => {
   }, [data?.deployments])
 
   return (
-    <div className="mt-1 bg-white rounded-md shadow overflow-scroll h-80">
+    <div className="mt-1 bg-white rounded-md shadow overflow-scroll overflow-x-hidden h-96">
       <div className="py-2">
-        {deployments.map(({ uid, meta, url, state }) => (
+        {deployments.map(({ uid, meta, url, state, target }) => (
           <div
             key={uid}
             className="flex items-center px-4 py-3 border-b hover:bg-gray-100 -mx-2"
           >
-            <div className="text-gray-600 text-sm mx-2">
-              <p className="text-gray-400">
-                {getBranchName(meta).slice(0, 45)}
+            <div className="text-gray-400 text-sm mx-2 cursor-pointer hover:bg-gray-100">
+              <p className="truncate p-1">
+                <svg
+                  viewBox="0 0 24 24"
+                  width="16"
+                  height="16"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  fill="none"
+                  shapeRendering="geometricPrecision"
+                  className="inline-block mr-1"
+                >
+                  <path d="M6 3v12" />
+                  <circle cx="18" cy="6" r="3" />
+                  <circle cx="6" cy="18" r="3" />
+                  <path d="M18 9a9 9 0 01-9 9" />
+                </svg>
+                {getBranchName(meta)}
               </p>
-              <p className="text-gray-400">
-                {getCommitMessage(meta).slice(0, 45)}
+              <p className="truncate p-1">
+                <span className="text-green-300 mr-2">{state}</span>
+                {target ?? 'preview'}
               </p>
-              <p className="text-green-300">{state}</p>
-              <p className="">{url}</p>
+              <p className="truncate p-1 text-gray-600 font-bold">{url}</p>
             </div>
           </div>
         ))}
@@ -240,7 +297,7 @@ const DeploymentsPanel: VFC<Props> = ({ team, project }) => {
       {data?.next && (
         <div
           onClick={() => setNext(data?.next)}
-          className="block bg-gray-800 text-white text-center font-bold py-2"
+          className="block cursor-pointer bg-gray-700 hover:bg-gray-800 text-white text-center font-bold py-4"
         >
           See More
         </div>
@@ -253,10 +310,4 @@ const getBranchName = (meta: Record<string, string>): string => {
   const [, branchName] =
     Object.entries(meta).find(([key]) => key.includes('CommitRef')) ?? []
   return branchName ?? ''
-}
-
-const getCommitMessage = (meta: Record<string, string>): string => {
-  const [, message] =
-    Object.entries(meta).find(([key]) => key.includes('CommitMessage')) ?? []
-  return message ?? ''
 }
