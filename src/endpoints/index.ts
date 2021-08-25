@@ -5,5 +5,6 @@ export const ENDPOINTS = {
   environments: (projectId: string): string =>
     `https://api.vercel.com/v8/projects/${projectId}/env/`,
   environment: (projectId: string, envId: string): string =>
-    `https://api.vercel.com/v8/projects/${projectId}/env/${envId}`
+    `https://api.vercel.com/v8/projects/${projectId}/env/${envId}`,
+  deployments: 'https://vercel.com/api/v6/now/deployments'
 }

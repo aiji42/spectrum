@@ -47,6 +47,16 @@ export type Environment = {
 
 export type Projects = Project[]
 
+export type Deployment = {
+  uid: string
+  url: string
+  state: 'QUEUED' | 'BUILDING' | 'READY' | 'ERROR'
+  meta: { [k: string]: string }
+  createdAt: number
+}
+
+export type Deployments = Deployment[]
+
 export type Splits = Record<
   string,
   {

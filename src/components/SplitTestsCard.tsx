@@ -2,7 +2,7 @@ import { PlayIcon, PlusCircleIcon } from '@heroicons/react/solid'
 import { VFC } from 'react'
 import { Fragment } from 'react'
 import { Dialog, Transition } from '@headlessui/react'
-import { SplitForm } from '@/components/SpritForm'
+import { SplitForm } from '@/components/SplitForm'
 import { Project, Splits, Team } from '@/types'
 import { useSplitTestCard } from '@/hooks/use-split-tests-card'
 
@@ -127,6 +127,8 @@ export const SplitTestsCard: VFC<Props> = ({ project, team, splits }) => {
                   editingKey={status.editingKey ?? ''}
                   dispatch={helper.formDispatch}
                   splitsData={status.currentSplits}
+                  project={project}
+                  team={team}
                 />
               </div>
             </Transition.Child>

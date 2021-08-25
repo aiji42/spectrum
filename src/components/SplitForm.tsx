@@ -1,12 +1,15 @@
-import { Dispatch, useMemo, VFC } from 'react'
+import { Dispatch, useEffect, useMemo, useRef, useState, VFC } from 'react'
 import { Dialog } from '@headlessui/react'
 import { useForm } from 'react-hook-form'
-import { Splits, SplitFormAction } from '@/types'
+import { Splits, SplitFormAction, Project, Team, Deployments } from '@/types'
+import { useDeployments } from '@/hooks/use-deployments'
 
 type Props = {
   dispatch: Dispatch<SplitFormAction>
   editingKey: string
   splitsData: Splits
+  project: Project
+  team: Team | null
 }
 
 type FormInput = {
@@ -19,7 +22,8 @@ type FormInput = {
   }
 }
 
-export const SplitForm: VFC<Props> = ({ dispatch, editingKey, splitsData }) => {
+export const SplitForm: VFC<Props> = (props) => {
+  const { dispatch, editingKey, splitsData } = props
   const { register, handleSubmit } = useForm<FormInput>()
   const onSubmit = handleSubmit((data) => {
     dispatch({
@@ -141,6 +145,7 @@ export const SplitForm: VFC<Props> = ({ dispatch, editingKey, splitsData }) => {
                 defaultValue={data.challengerHost}
               />
             </div>
+            <DeploymentsPanel {...props} />
           </label>
           <label className="block text-sm font-medium text-gray-700 mt-4">
             Allocate weight for original
@@ -196,4 +201,62 @@ export const SplitForm: VFC<Props> = ({ dispatch, editingKey, splitsData }) => {
       </div>
     </form>
   )
+}
+
+const DeploymentsPanel: VFC<Props> = ({ team, project }) => {
+  const [next, setNext] = useState<undefined | number>()
+  const data = useDeployments({
+    projectId: project.id,
+    teamId: team?.id,
+    next
+  })
+  const [deployments, setDeployments] = useState<Deployments>([])
+  useEffect(() => {
+    if (!data?.deployments) return
+    setDeployments((prev) => [...prev, ...data.deployments])
+  }, [data?.deployments])
+
+  return (
+    <div className="mt-1 bg-white rounded-md shadow overflow-scroll h-80">
+      <div className="py-2">
+        {deployments.map(({ uid, meta, url, state }) => (
+          <div
+            key={uid}
+            className="flex items-center px-4 py-3 border-b hover:bg-gray-100 -mx-2"
+          >
+            <div className="text-gray-600 text-sm mx-2">
+              <p className="text-gray-400">
+                {getBranchName(meta).slice(0, 45)}
+              </p>
+              <p className="text-gray-400">
+                {getCommitMessage(meta).slice(0, 45)}
+              </p>
+              <p className="text-green-300">{state}</p>
+              <p className="">{url}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+      {data?.next && (
+        <div
+          onClick={() => setNext(data?.next)}
+          className="block bg-gray-800 text-white text-center font-bold py-2"
+        >
+          See More
+        </div>
+      )}
+    </div>
+  )
+}
+
+const getBranchName = (meta: Record<string, string>): string => {
+  const [, branchName] =
+    Object.entries(meta).find(([key]) => key.includes('CommitRef')) ?? []
+  return branchName ?? ''
+}
+
+const getCommitMessage = (meta: Record<string, string>): string => {
+  const [, message] =
+    Object.entries(meta).find(([key]) => key.includes('CommitMessage')) ?? []
+  return message ?? ''
 }
