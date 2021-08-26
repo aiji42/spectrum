@@ -73,3 +73,15 @@ export const getToken = async (
 
   return doc.data()?.vercelToken ?? ''
 }
+
+export const isLoggedIn = async (
+  ctx: GetServerSidePropsContext
+): Promise<boolean> => {
+  try {
+    const cookies = nookies.get(ctx)
+    const token = cookies[FIREBASE_COOKIE_KEY]
+    return !!(await firebaseAdmin.auth().verifyIdToken(token))
+  } catch (_) {
+    return false
+  }
+}

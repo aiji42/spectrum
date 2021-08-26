@@ -15,7 +15,7 @@ import {
 } from '@heroicons/react/outline'
 import { Project, Projects, Teams, User } from '@/types'
 import { isControllableDeploy, isRunningSplitTests } from '@/utils'
-import { firebaseUser, Login } from '@/libs/firebase/firebase'
+import { Login } from '@/libs/firebase/firebase'
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(' ')
@@ -27,6 +27,7 @@ type Props = {
   user?: User
   teams: Teams
   projects: Projects
+  loggedIn: boolean
 }
 
 export const Header: VFC<Props> = ({
@@ -34,10 +35,9 @@ export const Header: VFC<Props> = ({
   projects,
   slug,
   user,
-  teams
+  teams,
+  loggedIn
 }) => {
-  const isLoggedIn = !!firebaseUser()
-
   return (
     <div className="flex items-center border-b-2 border-gray-100 py-4 justify-start space-x-10">
       <div className="flex-1 justify-start lg:w-0">
@@ -176,6 +176,15 @@ export const Header: VFC<Props> = ({
                   <Popover.Panel className="absolute z-10 -ml-4 mt-3 transform px-2 sm:w-screen max-w-md sm:px-0 lg:ml-0 lg:left-1/2 lg:-translate-x-1/2">
                     <div className="rounded-lg shadow-lg ring-1 ring-black ring-opacity-5 overflow-hidden">
                       <div className="relative grid gap-6 bg-white px-5 py-6 sm:gap-8 sm:p-8">
+                        {projects.length < 1 && (
+                          <div className="-m-3 p-3 flex items-start rounded-lg">
+                            <div>
+                              <p className="text-base font-medium text-gray-500">
+                                No projects
+                              </p>
+                            </div>
+                          </div>
+                        )}
                         {projects.map((project) => (
                           <Link
                             href={`/vercel/${slug}/${project.name}`}
@@ -219,7 +228,7 @@ export const Header: VFC<Props> = ({
         )}
       </Popover.Group>
       <div className="flex items-center justify-end">
-        {isLoggedIn ? (
+        {loggedIn ? (
           <Link href="/setting">
             <a className="mt-1 mx-4">
               <AdjustmentsIcon

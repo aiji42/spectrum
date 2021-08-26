@@ -2,12 +2,17 @@ import { VFC } from 'react'
 import { GetServerSideProps } from 'next'
 import { ProjectCard } from '@/components/ProjectCard'
 import { SplitTestsCard } from '@/components/SplitTestsCard'
-import { fetchProjects, fetchUserAndTeams } from '@/libs/server-side'
+import {
+  fetchProjects,
+  fetchUserAndTeams,
+  isLoggedIn
+} from '@/libs/server-side'
 import { Project, Projects, Splits, Team, Teams, User } from '@/types'
 import { getSplitEnvFromProject } from '@/utils'
 
-export const getServerSideProps: GetServerSideProps = async (ctx) => {
+export const getServerSideProps: GetServerSideProps<Props> = async (ctx) => {
   const { query } = ctx
+  const loggedIn = await isLoggedIn(ctx)
   const { user, teams } = await fetchUserAndTeams(ctx)
 
   if (!user || !teams)
@@ -43,12 +48,13 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
   return {
     props: {
       project,
-      slug: query.slug,
+      slug: query.slug as string,
       user,
       team,
       teams,
       projects,
-      splits
+      splits,
+      loggedIn
     }
   }
 }
@@ -61,6 +67,7 @@ type Props = {
   team: Team | null
   projects: Projects
   splits: Splits
+  loggedIn: boolean
 }
 
 const Home: VFC<Props> = (props) => {
