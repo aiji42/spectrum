@@ -9,7 +9,7 @@ export const Footer: VFC = () => {
       md:flex-row max-w-7xl"
       >
         <div className="md:flex-auto md:flex-row-reverse mt-2 flex-row flex">
-          <Link href="https://github.com/aiji42/spectrum">
+          <Link href="https://github.com/aiji42/next-with-split">
             <a className="w-6 mx-1" target="_blank" rel="noopener noreferrer">
               <svg
                 width="20"
