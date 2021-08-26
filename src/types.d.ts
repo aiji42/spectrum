@@ -54,7 +54,7 @@ export type Deployment = {
   uid: string
   url: string
   target: string | null
-  state: 'QUEUED' | 'BUILDING' | 'READY' | 'ERROR'
+  state: 'QUEUED' | 'CANCELED' | 'BUILDING' | 'READY' | 'ERROR'
   meta: { [k: string]: string }
   createdAt: number
 }

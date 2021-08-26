@@ -1,7 +1,22 @@
-import { Dispatch, useEffect, useMemo, useState, VFC } from 'react'
+import {
+  Dispatch,
+  useCallback,
+  useEffect,
+  useMemo,
+  useReducer,
+  useState,
+  VFC
+} from 'react'
 import { Dialog } from '@headlessui/react'
 import { useForm } from 'react-hook-form'
-import { Splits, SplitFormAction, Project, Team, Deployments } from '@/types'
+import {
+  Splits,
+  SplitFormAction,
+  Project,
+  Team,
+  Deployments,
+  Deployment
+} from '@/types'
 import { useDeployments } from '@/hooks/use-deployments'
 import { Transition } from '@headlessui/react'
 
@@ -65,14 +80,32 @@ export const SplitForm: VFC<Props> = (props) => {
     }
   }, [editingKey, splitsData])
 
-  const [openPanelOriginal, setOpenPanelOriginal] = useState(false)
-  const [openPanelChallenger, setOpenPanelChallenger] = useState(false)
-  const handleSelectOriginal = (host: string) => {
-    setValue('original.host', host)
-  }
-  const handleSelectChallenger = (host: string) => {
-    setValue('challenger.host', host)
-  }
+  const [open, handlePanel] = useReducer(
+    (
+      state: { original: boolean; challenger: boolean },
+      action: { type: 'close' | 'openOriginal' | 'openChallenger' }
+    ) => {
+      if (action.type === 'close') return { original: false, challenger: false }
+      if (action.type === 'openOriginal')
+        return { original: true, challenger: false }
+      if (action.type === 'openChallenger')
+        return { original: false, challenger: true }
+      return { original: false, challenger: false }
+    },
+    { original: false, challenger: false }
+  )
+  const handleSelectOriginal = useCallback(
+    (host: string) => {
+      setValue('original.host', host)
+    },
+    [setValue]
+  )
+  const handleSelectChallenger = useCallback(
+    (host: string) => {
+      setValue('challenger.host', host)
+    },
+    [setValue]
+  )
 
   return (
     <form onSubmit={onSubmit}>
@@ -93,10 +126,7 @@ export const SplitForm: VFC<Props> = (props) => {
                 className="focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md placeholder-gray-400"
                 placeholder="test1"
                 defaultValue={data.name}
-                onFocus={() => {
-                  setOpenPanelOriginal(false)
-                  setOpenPanelChallenger(false)
-                }}
+                onFocus={() => handlePanel({ type: 'close' })}
               />
             </div>
           </label>
@@ -109,10 +139,7 @@ export const SplitForm: VFC<Props> = (props) => {
                 className="focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md placeholder-gray-400"
                 placeholder="/foo/bar"
                 defaultValue={data.path}
-                onFocus={() => {
-                  setOpenPanelOriginal(false)
-                  setOpenPanelChallenger(false)
-                }}
+                onFocus={() => handlePanel({ type: 'close' })}
               />
             </div>
           </label>
@@ -125,10 +152,7 @@ export const SplitForm: VFC<Props> = (props) => {
                 className="focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md placeholder-gray-400"
                 placeholder="main"
                 defaultValue={data.originalBranch}
-                onFocus={() => {
-                  setOpenPanelOriginal(false)
-                  setOpenPanelChallenger(false)
-                }}
+                onFocus={() => handlePanel({ type: 'close' })}
               />
             </div>
           </label>
@@ -141,14 +165,11 @@ export const SplitForm: VFC<Props> = (props) => {
                 className="focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md placeholder-gray-400"
                 placeholder="original.example.com"
                 defaultValue={data.originalHost}
-                onFocus={() => {
-                  setOpenPanelOriginal(true)
-                  setOpenPanelChallenger(false)
-                }}
+                onFocus={() => handlePanel({ type: 'openOriginal' })}
               />
             </div>
             <Transition
-              show={openPanelOriginal}
+              show={open.original}
               enter="transition duration-100 ease-out"
               enterFrom="transform scale-95 opacity-0"
               enterTo="transform scale-100 opacity-100"
@@ -168,10 +189,7 @@ export const SplitForm: VFC<Props> = (props) => {
                 className="focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md placeholder-gray-400"
                 placeholder="challenger"
                 defaultValue={data.challengerBranch}
-                onFocus={() => {
-                  setOpenPanelOriginal(false)
-                  setOpenPanelChallenger(false)
-                }}
+                onFocus={() => handlePanel({ type: 'close' })}
               />
             </div>
           </label>
@@ -184,14 +202,11 @@ export const SplitForm: VFC<Props> = (props) => {
                 className="focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md placeholder-gray-400"
                 placeholder="challenger.example.com"
                 defaultValue={data.challengerHost}
-                onFocus={() => {
-                  setOpenPanelOriginal(false)
-                  setOpenPanelChallenger(true)
-                }}
+                onFocus={() => handlePanel({ type: 'openChallenger' })}
               />
             </div>
             <Transition
-              show={openPanelChallenger}
+              show={open.challenger}
               enter="transition duration-100 ease-out"
               enterFrom="transform scale-95 opacity-0"
               enterTo="transform scale-100 opacity-100"
@@ -213,10 +228,7 @@ export const SplitForm: VFC<Props> = (props) => {
                 type="number"
                 className="focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md placeholder-gray-400"
                 defaultValue={data.originalWeight}
-                onFocus={() => {
-                  setOpenPanelOriginal(false)
-                  setOpenPanelChallenger(false)
-                }}
+                onFocus={() => handlePanel({ type: 'close' })}
               />
             </div>
           </label>
@@ -228,10 +240,7 @@ export const SplitForm: VFC<Props> = (props) => {
                 type="number"
                 className="focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md placeholder-gray-400"
                 defaultValue={data.challengerWeight}
-                onFocus={() => {
-                  setOpenPanelOriginal(false)
-                  setOpenPanelChallenger(false)
-                }}
+                onFocus={() => handlePanel({ type: 'close' })}
               />
             </div>
           </label>
@@ -243,10 +252,7 @@ export const SplitForm: VFC<Props> = (props) => {
                 type="number"
                 className="focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md placeholder-gray-400"
                 defaultValue={data.cookieMaxAge}
-                onFocus={() => {
-                  setOpenPanelOriginal(false)
-                  setOpenPanelChallenger(false)
-                }}
+                onFocus={() => handlePanel({ type: 'close' })}
               />
             </div>
           </label>
@@ -294,155 +300,99 @@ const DeploymentsPanel: VFC<Props & { onSelected: (host: string) => void }> = ({
     <div className="mt-1 bg-white rounded-md shadow overflow-scroll h-96">
       <div className="pt-2">
         {project.alias.map((alias) => (
-          <div
+          <DeploymentsPanelItem
             key={alias.domain}
-            className="flex items-center px-4 py-3 border-b hover:bg-gray-100 cursor-pointer"
             onClick={() => onSelected(alias.domain)}
-          >
-            <div className="text-gray-400 text-sm">
-              <p className="truncate pb-1">
-                <svg
-                  viewBox="0 0 24 24"
-                  width="16"
-                  height="16"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  fill="none"
-                  shapeRendering="geometricPrecision"
-                  className="inline-block mr-1"
-                >
-                  <path d="M6 3v12" />
-                  <circle cx="18" cy="6" r="3" />
-                  <circle cx="6" cy="18" r="3" />
-                  <path d="M18 9a9 9 0 01-9 9" />
-                </svg>
-                {getBranchName(project.targets.production.meta)}
-              </p>
-              <p className="truncate pb-1">
-                <span className="mr-2">production</span>
-                <span
-                  className={
-                    project.targets.production.readyState === 'READY'
-                      ? 'text-green-600'
-                      : project.targets.production.readyState === 'ERROR'
-                      ? 'text-red-600'
-                      : project.targets.production.readyState === 'BUILDING'
-                      ? 'text-yellow-600'
-                      : 'text-gray-600'
-                  }
-                >
-                  {project.targets.production.readyState}
-                </span>
-              </p>
-              <p className="truncate text-gray-600 font-bold">{alias.domain}</p>
-            </div>
-          </div>
+            branchName={getBranchName(project.targets.production.meta)}
+            target="production"
+            state={project.targets.production.readyState}
+            host={alias.domain}
+          />
         ))}
         {project.targets.production.alias.map((alias) => (
-          <div
+          <DeploymentsPanelItem
             key={alias}
-            className="flex items-center px-4 py-3 border-b hover:bg-gray-100 cursor-pointer"
             onClick={() => onSelected(alias)}
-          >
-            <div className="text-gray-400 text-sm">
-              <p className="truncate pb-1">
-                <svg
-                  viewBox="0 0 24 24"
-                  width="16"
-                  height="16"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  fill="none"
-                  shapeRendering="geometricPrecision"
-                  className="inline-block mr-1"
-                >
-                  <path d="M6 3v12" />
-                  <circle cx="18" cy="6" r="3" />
-                  <circle cx="6" cy="18" r="3" />
-                  <path d="M18 9a9 9 0 01-9 9" />
-                </svg>
-                {getBranchName(project.targets.production.meta)}
-              </p>
-              <p className="truncate pb-1">
-                <span className="mr-2">production</span>
-                <span
-                  className={
-                    project.targets.production.readyState === 'READY'
-                      ? 'text-green-600'
-                      : project.targets.production.readyState === 'ERROR'
-                      ? 'text-red-600'
-                      : project.targets.production.readyState === 'BUILDING'
-                      ? 'text-yellow-600'
-                      : 'text-gray-600'
-                  }
-                >
-                  {project.targets.production.readyState}
-                </span>
-              </p>
-              <p className="truncate text-gray-600 font-bold">{alias}</p>
-            </div>
-          </div>
+            branchName={getBranchName(project.targets.production.meta)}
+            target="production"
+            state={project.targets.production.readyState}
+            host={alias}
+          />
         ))}
         {deployments.map(({ uid, meta, url, state, target }) => (
-          <div
+          <DeploymentsPanelItem
             key={uid}
-            className="flex items-center px-4 py-3 border-b hover:bg-gray-100 cursor-pointer"
             onClick={() => onSelected(url)}
-          >
-            <div className="text-gray-400 text-sm">
-              <p className="truncate pb-1">
-                <svg
-                  viewBox="0 0 24 24"
-                  width="16"
-                  height="16"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  fill="none"
-                  shapeRendering="geometricPrecision"
-                  className="inline-block mr-1"
-                >
-                  <path d="M6 3v12" />
-                  <circle cx="18" cy="6" r="3" />
-                  <circle cx="6" cy="18" r="3" />
-                  <path d="M18 9a9 9 0 01-9 9" />
-                </svg>
-                {getBranchName(meta)}
-              </p>
-              <p className="truncate pb-1">
-                <span className="mr-2">{target ?? 'preview'}</span>
-                <span
-                  className={
-                    state === 'READY'
-                      ? 'text-green-600'
-                      : state === 'ERROR'
-                      ? 'text-red-600'
-                      : state === 'BUILDING'
-                      ? 'text-yellow-600'
-                      : 'text-gray-600'
-                  }
-                >
-                  {state}
-                </span>
-              </p>
-              <p className="truncate text-gray-600 font-bold">{url}</p>
-            </div>
-          </div>
+            branchName={getBranchName(meta)}
+            target={target ?? 'preview'}
+            state={state}
+            host={url}
+          />
         ))}
       </div>
       {data?.next && (
-        <div
+        <button
           onClick={() => setNext(data?.next)}
-          className="block cursor-pointer bg-gray-700 hover:bg-gray-800 text-white text-center font-bold py-4"
+          className="block w-full cursor-pointer bg-gray-700 hover:bg-gray-800 text-white text-center font-bold py-4"
         >
           See More
-        </div>
+        </button>
       )}
+    </div>
+  )
+}
+
+const DeploymentsPanelItem: VFC<{
+  onClick: () => void
+  branchName: string
+  state: Deployment['state']
+  host: string
+  target: string
+}> = ({ onClick, branchName, state, target, host }) => {
+  return (
+    <div
+      className="flex items-center px-4 py-3 border-b hover:bg-gray-100 cursor-pointer"
+      onClick={onClick}
+    >
+      <div className="text-gray-400 text-sm">
+        <p className="truncate pb-1">
+          <svg
+            viewBox="0 0 24 24"
+            width="16"
+            height="16"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            fill="none"
+            shapeRendering="geometricPrecision"
+            className="inline-block mr-1"
+          >
+            <path d="M6 3v12" />
+            <circle cx="18" cy="6" r="3" />
+            <circle cx="6" cy="18" r="3" />
+            <path d="M18 9a9 9 0 01-9 9" />
+          </svg>
+          {branchName}
+        </p>
+        <p className="truncate pb-1">
+          <span className="mr-2">{target}</span>
+          <span
+            className={
+              state === 'READY'
+                ? 'text-green-600'
+                : state === 'ERROR'
+                ? 'text-red-600'
+                : state === 'BUILDING'
+                ? 'text-yellow-600'
+                : 'text-gray-600'
+            }
+          >
+            {state}
+          </span>
+        </p>
+        <p className="truncate text-gray-600 font-bold">{host}</p>
+      </div>
     </div>
   )
 }
