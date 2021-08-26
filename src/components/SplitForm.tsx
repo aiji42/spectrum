@@ -3,6 +3,7 @@ import { Dialog } from '@headlessui/react'
 import { useForm } from 'react-hook-form'
 import { Splits, SplitFormAction, Project, Team, Deployments } from '@/types'
 import { useDeployments } from '@/hooks/use-deployments'
+import { Transition } from '@headlessui/react'
 
 type Props = {
   dispatch: Dispatch<SplitFormAction>
@@ -24,7 +25,7 @@ type FormInput = {
 
 export const SplitForm: VFC<Props> = (props) => {
   const { dispatch, editingKey, splitsData } = props
-  const { register, handleSubmit } = useForm<FormInput>()
+  const { register, handleSubmit, setValue } = useForm<FormInput>()
   const onSubmit = handleSubmit((data) => {
     dispatch({
       type: editingKey === '' ? 'CREATE' : 'UPDATE',
@@ -66,6 +67,12 @@ export const SplitForm: VFC<Props> = (props) => {
 
   const [openPanelOriginal, setOpenPanelOriginal] = useState(false)
   const [openPanelChallenger, setOpenPanelChallenger] = useState(false)
+  const handleSelectOriginal = (host: string) => {
+    setValue('original.host', host)
+  }
+  const handleSelectChallenger = (host: string) => {
+    setValue('challenger.host', host)
+  }
 
   return (
     <form onSubmit={onSubmit}>
@@ -140,7 +147,17 @@ export const SplitForm: VFC<Props> = (props) => {
                 }}
               />
             </div>
-            {openPanelOriginal && <DeploymentsPanel {...props} />}
+            <Transition
+              show={openPanelOriginal}
+              enter="transition duration-100 ease-out"
+              enterFrom="transform scale-95 opacity-0"
+              enterTo="transform scale-100 opacity-100"
+              leave="transition duration-100 ease-out"
+              leaveFrom="transform scale-100 opacity-100"
+              leaveTo="transform scale-95 opacity-0"
+            >
+              <DeploymentsPanel {...props} onSelected={handleSelectOriginal} />
+            </Transition>
           </label>
           <label className="block text-sm font-medium text-gray-700 mt-4">
             Challenger branch
@@ -173,7 +190,20 @@ export const SplitForm: VFC<Props> = (props) => {
                 }}
               />
             </div>
-            {openPanelChallenger && <DeploymentsPanel {...props} />}
+            <Transition
+              show={openPanelChallenger}
+              enter="transition duration-100 ease-out"
+              enterFrom="transform scale-95 opacity-0"
+              enterTo="transform scale-100 opacity-100"
+              leave="transition duration-100 ease-out"
+              leaveFrom="transform scale-100 opacity-100"
+              leaveTo="transform scale-95 opacity-0"
+            >
+              <DeploymentsPanel
+                {...props}
+                onSelected={handleSelectChallenger}
+              />
+            </Transition>
           </label>
           <label className="block text-sm font-medium text-gray-700 mt-4">
             Allocate weight for original
@@ -243,7 +273,11 @@ export const SplitForm: VFC<Props> = (props) => {
   )
 }
 
-const DeploymentsPanel: VFC<Props> = ({ team, project }) => {
+const DeploymentsPanel: VFC<Props & { onSelected: (host: string) => void }> = ({
+  team,
+  project,
+  onSelected
+}) => {
   const [next, setNext] = useState<undefined | number>()
   const data = useDeployments({
     projectId: project.id,
@@ -259,10 +293,58 @@ const DeploymentsPanel: VFC<Props> = ({ team, project }) => {
   return (
     <div className="mt-1 bg-white rounded-md shadow overflow-scroll h-96">
       <div className="pt-2">
+        {project.alias.map((alias) => (
+          <div
+            key={alias.domain}
+            className="flex items-center px-4 py-3 border-b hover:bg-gray-100 cursor-pointer"
+            onClick={() => onSelected(alias.domain)}
+          >
+            <div className="text-gray-400 text-sm">
+              <p className="truncate pb-1">
+                <svg
+                  viewBox="0 0 24 24"
+                  width="16"
+                  height="16"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  fill="none"
+                  shapeRendering="geometricPrecision"
+                  className="inline-block mr-1"
+                >
+                  <path d="M6 3v12" />
+                  <circle cx="18" cy="6" r="3" />
+                  <circle cx="6" cy="18" r="3" />
+                  <path d="M18 9a9 9 0 01-9 9" />
+                </svg>
+                {getBranchName(project.targets.production.meta)}
+              </p>
+              <p className="truncate pb-1">
+                <span className="mr-2">production</span>
+                <span
+                  className={
+                    project.targets.production.readyState === 'READY'
+                      ? 'text-green-600'
+                      : project.targets.production.readyState === 'ERROR'
+                      ? 'text-red-600'
+                      : project.targets.production.readyState === 'BUILDING'
+                      ? 'text-yellow-600'
+                      : 'text-gray-600'
+                  }
+                >
+                  {project.targets.production.readyState}
+                </span>
+              </p>
+              <p className="truncate text-gray-600 font-bold">{alias.domain}</p>
+            </div>
+          </div>
+        ))}
         {project.targets.production.alias.map((alias) => (
           <div
             key={alias}
             className="flex items-center px-4 py-3 border-b hover:bg-gray-100 cursor-pointer"
+            onClick={() => onSelected(alias)}
           >
             <div className="text-gray-400 text-sm">
               <p className="truncate pb-1">
@@ -309,6 +391,7 @@ const DeploymentsPanel: VFC<Props> = ({ team, project }) => {
           <div
             key={uid}
             className="flex items-center px-4 py-3 border-b hover:bg-gray-100 cursor-pointer"
+            onClick={() => onSelected(url)}
           >
             <div className="text-gray-400 text-sm">
               <p className="truncate pb-1">

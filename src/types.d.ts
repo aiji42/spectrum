@@ -32,6 +32,9 @@ export type Project = {
       url: string
     }>
   }
+  alias: {
+    domain: string
+  }[]
   env?: Array<Environment>
 }
 
