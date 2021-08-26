@@ -257,15 +257,61 @@ const DeploymentsPanel: VFC<Props> = ({ team, project }) => {
   }, [data?.deployments])
 
   return (
-    <div className="mt-1 bg-white rounded-md shadow overflow-scroll overflow-x-hidden h-96">
-      <div className="py-2">
+    <div className="mt-1 bg-white rounded-md shadow overflow-scroll h-96">
+      <div className="pt-2">
+        {project.targets.production.alias.map((alias) => (
+          <div
+            key={alias}
+            className="flex items-center px-4 py-3 border-b hover:bg-gray-100 cursor-pointer"
+          >
+            <div className="text-gray-400 text-sm">
+              <p className="truncate pb-1">
+                <svg
+                  viewBox="0 0 24 24"
+                  width="16"
+                  height="16"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  fill="none"
+                  shapeRendering="geometricPrecision"
+                  className="inline-block mr-1"
+                >
+                  <path d="M6 3v12" />
+                  <circle cx="18" cy="6" r="3" />
+                  <circle cx="6" cy="18" r="3" />
+                  <path d="M18 9a9 9 0 01-9 9" />
+                </svg>
+                {getBranchName(project.targets.production.meta)}
+              </p>
+              <p className="truncate pb-1">
+                <span className="mr-2">production</span>
+                <span
+                  className={
+                    project.targets.production.readyState === 'READY'
+                      ? 'text-green-600'
+                      : project.targets.production.readyState === 'ERROR'
+                      ? 'text-red-600'
+                      : project.targets.production.readyState === 'BUILDING'
+                      ? 'text-yellow-600'
+                      : 'text-gray-600'
+                  }
+                >
+                  {project.targets.production.readyState}
+                </span>
+              </p>
+              <p className="truncate text-gray-600 font-bold">{alias}</p>
+            </div>
+          </div>
+        ))}
         {deployments.map(({ uid, meta, url, state, target }) => (
           <div
             key={uid}
-            className="flex items-center px-4 py-3 border-b hover:bg-gray-100 -mx-2"
+            className="flex items-center px-4 py-3 border-b hover:bg-gray-100 cursor-pointer"
           >
-            <div className="text-gray-400 text-sm mx-2 cursor-pointer hover:bg-gray-100">
-              <p className="truncate p-1">
+            <div className="text-gray-400 text-sm">
+              <p className="truncate pb-1">
                 <svg
                   viewBox="0 0 24 24"
                   width="16"
@@ -285,11 +331,23 @@ const DeploymentsPanel: VFC<Props> = ({ team, project }) => {
                 </svg>
                 {getBranchName(meta)}
               </p>
-              <p className="truncate p-1">
-                <span className="text-green-300 mr-2">{state}</span>
-                {target ?? 'preview'}
+              <p className="truncate pb-1">
+                <span className="mr-2">{target ?? 'preview'}</span>
+                <span
+                  className={
+                    state === 'READY'
+                      ? 'text-green-600'
+                      : state === 'ERROR'
+                      ? 'text-red-600'
+                      : state === 'BUILDING'
+                      ? 'text-yellow-600'
+                      : 'text-gray-600'
+                  }
+                >
+                  {state}
+                </span>
               </p>
-              <p className="truncate p-1 text-gray-600 font-bold">{url}</p>
+              <p className="truncate text-gray-600 font-bold">{url}</p>
             </div>
           </div>
         ))}
