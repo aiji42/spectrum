@@ -297,7 +297,7 @@ const DeploymentsPanel: VFC<Props & { onSelected: (host: string) => void }> = ({
   }, [data?.deployments])
 
   return (
-    <div className="mt-1 bg-white rounded-md shadow overflow-scroll h-96">
+    <div className="mt-1 bg-white rounded-md shadow overflow-scroll overflow-x-hidden h-96">
       <div className="pt-2">
         {project.alias.map((alias) => (
           <DeploymentsPanelItem
