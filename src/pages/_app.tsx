@@ -41,24 +41,19 @@ const MyApp: VFC<AppProps> = ({ Component, pageProps }) => {
     <AuthContext.Provider value={firebaseState}>
       <SnackbarController>
         <Head>
-          <title>Spectrum | A/B tests controller for Next.js & Vercel</title>
+          <title>Spectrum</title>
           <meta
             property="description"
-            content="If you're using Next.js and Vercel on your website, you can't afford not to use this service named Spectrum. Spectrum assists you in improving your website through A/B testing."
+            content="A/B tests web console for Next.js & Vercel"
           />
-          <meta
-            property="og:title"
-            content="Spectrum | A/B tests controller for Next.js & Vercel"
-          />
+          <meta property="og:title" content="Spectrum" />
           <meta
             property="og:description"
-            content="If you're using Next.js and Vercel on your website, you can't afford not to use this service named Spectrum. Spectrum assists you in improving your website through A/B testing."
+            content="A/B tests web console for Next.js & Vercel"
           />
           <meta
             property="og:image"
-            content={`${
-              process.env.NEXT_PUBLIC_VERCEL_URL ?? 'http://localhost:3000'
-            }/ogp_large.png`}
+            content="https://spectrum-kappa.vercel.app//ogp_large.png"
           />
           <meta name="twitter:card" content="summary_large_image" />
         </Head>
