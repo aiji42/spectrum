@@ -7,7 +7,7 @@ export const FeaturesBoxes: VFC = () => {
         <div className="py-12 md:py-20">
           <div className="max-w-sm mx-auto grid gap-6 md:grid-cols-2 lg:grid-cols-3 items-start md:max-w-2xl lg:max-w-none">
             <div className="relative flex flex-col items-center p-6 bg-white rounded shadow-xl">
-              <div className="bg-blue-500 rounded-full h-14 w-14 flex items-center justify-center">
+              <div className="bg-gradient-to-r from-blue-500 to-green-400 rounded-full h-14 w-14 flex items-center justify-center">
                 <svg
                   viewBox="0 0 24 24"
                   width="28"
@@ -36,7 +36,7 @@ export const FeaturesBoxes: VFC = () => {
             </div>
 
             <div className="relative flex flex-col items-center p-6 bg-white rounded shadow-xl">
-              <div className="bg-blue-500 rounded-full h-14 w-14 flex items-center justify-center">
+              <div className="bg-gradient-to-r from-blue-500 to-green-400 rounded-full h-14 w-14 flex items-center justify-center">
                 <svg
                   width="1155"
                   height="1000"
@@ -59,7 +59,7 @@ export const FeaturesBoxes: VFC = () => {
             </div>
 
             <div className="relative flex flex-col items-center p-6 bg-white rounded shadow-xl">
-              <div className="bg-blue-500 rounded-full h-14 w-14 flex items-center justify-center">
+              <div className="bg-gradient-to-r from-blue-500 to-green-400 rounded-full h-14 w-14 flex items-center justify-center">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="28"
