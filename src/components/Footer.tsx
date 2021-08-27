@@ -3,7 +3,7 @@ import Link from 'next/link'
 
 export const Footer: VFC = () => {
   return (
-    <div className="pt-2">
+    <div className="pt-2 mt-8">
       <div
         className="flex pb-5 px-3 m-auto pt-5 border-t text-gray-800 text-sm flex-col
       md:flex-row max-w-7xl"
