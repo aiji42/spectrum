@@ -6,7 +6,7 @@ import darcula from 'react-syntax-highlighter/dist/cjs/styles/hljs/darcula'
 
 export const InstallSteps: VFC = () => {
   return (
-    <section className="max-w-7xl mx-auto py-10">
+    <section className="max-w-7xl mx-auto py-32">
       <div>
         <div className="flex flex-row">
           <div className="hidden md:flex flex-col items-center">
