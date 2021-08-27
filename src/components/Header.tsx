@@ -14,7 +14,7 @@ import {
   AdjustmentsIcon
 } from '@heroicons/react/outline'
 import { Project, Projects, Teams, User } from '@/types'
-import { isControllableDeploy, isRunningSplitTests } from '@/utils'
+import { isRunningSplitTests } from '@/utils'
 import { Login } from '@/libs/firebase/firebase'
 
 function classNames(...classes: string[]) {
@@ -210,10 +210,6 @@ export const Header: VFC<Props> = ({
                                 <p className="text-base font-medium text-gray-900">
                                   {project.name}
                                 </p>
-                                <span className="text-sm text-gray-500">
-                                  {!isControllableDeploy(project) && 'Not '}
-                                  Controllable
-                                </span>
                               </div>
                             </a>
                           </Link>

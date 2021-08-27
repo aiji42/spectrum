@@ -164,8 +164,19 @@ module.export = withSplit({
                   Get an API token.
                 </div>
                 <div className="px-4 pb-6">
-                  From the Vercel web console, go to <b>Settings</b> &gt;{' '}
-                  <b>Tokens</b> to generate a token.
+                  <p>
+                    Create an API token in Vercel&apos;s web console.
+                    <a
+                      href="https://vercel.com/account/tokens"
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      <ExternalLinkIcon className="ml-2 inline-block w-4 h-4 text-indigo-500 hover:text-indigo-600" />
+                    </a>
+                  </p>
+                  <p className="mt-2">
+                    <b>Settings</b> &gt; <b>Tokens</b>
+                  </p>
                 </div>
               </div>
               <div className="flex-1">
