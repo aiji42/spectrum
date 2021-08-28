@@ -10,22 +10,19 @@ export const InstallSteps: VFC = () => {
       <div>
         <div className="flex flex-row">
           <div className="hidden md:flex flex-col items-center">
-            <div className="w-32 py-5 border border-green-300 rounded mr-4 flex flex-col items-center justify-center">
-              <div className="text-3xl font-black text-gray-500 uppercase">
-                Step 1
-              </div>
+            <div className="w-32 py-5 shadow-xl rounded mr-4 flex flex-col items-center justify-center">
+              <div className="text-3xl font-bold text-gray-500">Step 1</div>
               <div className="text-gray-500 text-sm">Project code</div>
             </div>
             <div className="h-full border-l-4 border-transparent">
-              <div className="border-l-4 mr-4 h-full border-green-300 border-dashed" />
+              <div className="border-l-4 mr-4 h-full border-green-500 border-dashed" />
             </div>
           </div>
-          <div className="flex-auto border rounded  border-green-300">
+          <div className="flex-auto rounded shadow-xl">
             <div className="flex md:flex-row flex-col items-center">
               <div className="flex-1">
                 <div className="md:hidden text-sm font-normal pt-3 pl-3 text-gray-500">
-                  <span className="font-black uppercase">Step 1</span> - Project
-                  code
+                  <span className="font-bold">Step 1</span> - Project code
                 </div>
                 <div className="p-4 text-3xl bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-green-400 font-medium">
                   Change the next.config.js and deploy the project.
@@ -68,30 +65,28 @@ module.export = withSplit({
         </div>
         <div className="flex items-start flex-row">
           <div className="border-t-4 border-r-4 border-transparent">
-            <div className="w-16 ml-16 h-16 border-l-4 border-green-300 border-dashed border-b-4 rounded-bl-full" />
+            <div className="w-16 ml-16 h-16 border-l-4 border-green-500 border-dashed border-b-4 rounded-bl-full" />
           </div>
           <div className="border-t-4 border-transparent flex-auto">
-            <div className="h-16 border-b-4 border-green-300 border-dashed" />
+            <div className="h-16 border-b-4 border-green-500 border-dashed" />
           </div>
-          <div className="w-16 mt-16 mr-16 h-16 border-r-4 border-green-300 border-dashed border-t-4 rounded-tr-full" />
+          <div className="w-16 mt-16 mr-16 h-16 border-r-4 border-green-500 border-dashed border-t-4 rounded-tr-full" />
         </div>
         <div className="flex flex-row-reverse">
           <div className="hidden md:flex flex-col items-center">
-            <div className="w-32 py-5 border border-green-300 rounded ml-4 flex flex-col items-center justify-center">
-              <div className="text-3xl font-black uppercase text-gray-500">
-                Step 2
-              </div>
+            <div className="w-32 py-5 shadow-xl rounded ml-4 flex flex-col items-center justify-center">
+              <div className="text-3xl font-bold text-gray-500">Step 2</div>
               <div className="text-gray-500 text-sm">Vercel</div>
             </div>
             <div className="h-full border-r-4 border-transparent">
-              <div className="border-l-4 ml-4 h-full border-green-300 border-dashed" />
+              <div className="border-l-4 ml-4 h-full border-green-500 border-dashed" />
             </div>
           </div>
-          <div className="flex-auto border rounded border-green-300">
+          <div className="flex-auto rounded shadow-xl">
             <div className="flex md:flex-row flex-col items-center">
               <div className="flex-1">
                 <div className="md:hidden text-sm font-normal pt-3 pl-3 text-gray-500">
-                  <span className="font-black uppercase">Step 2</span> - Vercel
+                  <span className="font-bold">Step 2</span> - Vercel
                 </div>
                 <div className="p-4 text-3xl bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-green-400 font-medium">
                   Get an API token.
@@ -125,30 +120,28 @@ module.export = withSplit({
         </div>
         <div className="flex items-start flex-row-reverse">
           <div className="border-t-4 border-l-4 border-transparent">
-            <div className="w-16 mr-16 h-16 border-r-4 border-green-300 border-dashed border-b-4 rounded-br-full" />
+            <div className="w-16 mr-16 h-16 border-r-4 border-green-500 border-dashed border-b-4 rounded-br-full" />
           </div>
           <div className="border-t-4 border-transparent flex-auto">
-            <div className="h-16 border-b-4 border-green-300 border-dashed" />
+            <div className="h-16 border-b-4 border-green-500 border-dashed" />
           </div>
-          <div className="w-16 mt-16 ml-16 h-16 border-l-4 border-green-300 border-dashed border-t-4 rounded-tl-full" />
+          <div className="w-16 mt-16 ml-16 h-16 border-l-4 border-green-500 border-dashed border-t-4 rounded-tl-full" />
         </div>
         <div className="flex flex-row">
           <div className="hidden md:flex flex-col items-center">
-            <div className="w-32 py-5 border border-green-300 rounded mr-4 flex flex-col items-center justify-center">
-              <div className="text-3xl font-black uppercase text-gray-500">
-                Step 3
-              </div>
+            <div className="w-32 py-5 shadow-xl rounded mr-4 flex flex-col items-center justify-center">
+              <div className="text-3xl font-bold text-gray-500">Step 3</div>
               <div className="text-gray-500 text-sm">Spectrum</div>
             </div>
             <div className="h-full border-l-4 border-transparent">
-              <div className="border-l-4 mr-4 h-full border-green-300 border-dashed" />
+              <div className="border-l-4 mr-4 h-full border-green-500 border-dashed" />
             </div>
           </div>
-          <div className="flex-auto border rounded  border-green-300">
+          <div className="flex-auto rounded shadow-xl">
             <div className="flex md:flex-row flex-col items-center">
               <div className="flex-1">
                 <div className="md:hidden text-sm font-normal pt-3 pl-3 text-gray-500">
-                  <span className="font-black　uppercase">Step 3</span> -
+                  <span className="font-bold　uppercase">Step 3</span> -
                   Spectrum
                 </div>
                 <div className="p-4 text-3xl bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-green-400 font-medium">
@@ -165,27 +158,25 @@ module.export = withSplit({
         </div>
         <div className="flex items-start flex-row">
           <div className="border-t-4 border-r-4 border-transparent">
-            <div className="w-16 ml-16 h-16 border-l-4 border-green-300 border-dashed border-b-4 rounded-bl-full" />
+            <div className="w-16 ml-16 h-16 border-l-4 border-green-500 border-dashed border-b-4 rounded-bl-full" />
           </div>
           <div className="border-t-4 border-transparent flex-auto">
-            <div className="h-16 border-b-4 border-green-300 border-dashed" />
+            <div className="h-16 border-b-4 border-green-500 border-dashed" />
           </div>
-          <div className="w-16 mt-16 mr-16 h-16 border-r-4 border-green-300 border-dashed border-t-4 rounded-tr-full" />
+          <div className="w-16 mt-16 mr-16 h-16 border-r-4 border-green-500 border-dashed border-t-4 rounded-tr-full" />
         </div>
         <div className="flex flex-row-reverse">
           <div className="hidden md:flex flex-col items-center">
-            <div className="w-32 py-5 border border-green-300 rounded ml-4 flex flex-col items-center justify-center">
-              <div className="text-3xl font-black text-gray-500 uppercase">
-                Goal
-              </div>
+            <div className="w-32 py-5 shadow-xl rounded ml-4 flex flex-col items-center justify-center">
+              <div className="text-3xl font-bold text-gray-500">Goal</div>
               <div className="text-gray-500 text-sm">Spectrum</div>
             </div>
           </div>
-          <div className="flex-auto border rounded  border-green-300">
+          <div className="flex-auto rounded shadow-xl">
             <div className="flex md:flex-row flex-col items-center">
               <div className="flex-1">
                 <div className="md:hidden text-sm font-normal pt-3 pl-3 text-gray-500">
-                  <span className="font-black uppercase">Goal</span> - Spectrum
+                  <span className="font-bold">Goal</span> - Spectrum
                 </div>
                 <div className="p-4 text-3xl bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-green-400 font-medium">
                   Congratulations!
