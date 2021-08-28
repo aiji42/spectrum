@@ -33,6 +33,15 @@ export const ProjectCard: VFC<Props> = (props) => {
       <div className="px-4 py-5 sm:px-6">
         <h3 className="text-lg leading-6 font-medium text-gray-900">
           {project.name}
+          <a
+            href={`https://vercel.com/${
+              props.team?.slug ?? props.user.username
+            }/${props.project.name}`}
+            target="_blank"
+            rel="noreferrer"
+          >
+            <ExternalLinkIcon className="ml-2 pb-1 inline-block w-6 h-6 text-indigo-500 hover:text-indigo-600" />
+          </a>
         </h3>
         <p className="mt-1 max-w-2xl text-sm text-gray-500">
           Latest production deployment information.
@@ -159,7 +168,7 @@ export const ProjectCard: VFC<Props> = (props) => {
                       <a
                         href={`https://vercel.com/${
                           props.team?.slug ?? props.user.username
-                        }/${props.project.name}/settings/git  `}
+                        }/${props.project.name}/settings/git`}
                         target="_blank"
                         rel="noreferrer"
                       >
