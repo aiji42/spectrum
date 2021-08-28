@@ -59,12 +59,13 @@ export const useSplitTestCard: UseSplitTestsCard = ({
   team,
   splits
 }) => {
+  const [originalSplits, setOriginalSplits] = useState(splits)
   const [currentSplits, formDispatch] = useReducer(reducer, splits)
   const [editingKey, setEditingKey] = useState<string | null>(null)
   const controllable = useMemo(() => isControllableDeploy(project), [project])
   const deployable = useMemo(
-    () => controllable && !equal(currentSplits, splits),
-    [controllable, currentSplits, splits]
+    () => controllable && !equal(currentSplits, originalSplits),
+    [controllable, currentSplits, originalSplits]
   )
   const handleClose = useCallback(() => setEditingKey(null), [])
   const handleCreate = useCallback(() => setEditingKey(''), [])
@@ -76,6 +77,7 @@ export const useSplitTestCard: UseSplitTestsCard = ({
   const router = useRouter()
 
   useEffect(() => {
+    setOriginalSplits(splits)
     formDispatch({ type: 'RELOAD', data: splits })
   }, [splits])
 
@@ -84,6 +86,7 @@ export const useSplitTestCard: UseSplitTestsCard = ({
     deploySplitTest(project, team, currentSplits)
       .then((res) => {
         if (res.ok) {
+          setOriginalSplits(currentSplits)
           showSnackbar(
             {
               type: 'success',
@@ -116,7 +119,7 @@ export const useSplitTestCard: UseSplitTestsCard = ({
           10000
         )
       )
-  }, [currentSplits, project, router, team])
+  }, [currentSplits, project, router.reload, showSnackbar, team])
 
   return [
     { editingKey, currentSplits, deployable, controllable },
