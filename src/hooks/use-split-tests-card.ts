@@ -44,6 +44,7 @@ type UseSplitTestsCard = ({
     currentSplits: Splits
     deployable: boolean
     controllable: boolean
+    deploying: boolean
   },
   {
     handleClose: () => void
@@ -62,6 +63,7 @@ export const useSplitTestCard: UseSplitTestsCard = ({
   const [originalSplits, setOriginalSplits] = useState(splits)
   const [currentSplits, formDispatch] = useReducer(reducer, splits)
   const [editingKey, setEditingKey] = useState<string | null>(null)
+  const [deploying, setDeploying] = useState(false)
   const controllable = useMemo(() => isControllableDeploy(project), [project])
   const deployable = useMemo(
     () => controllable && !equal(currentSplits, originalSplits),
@@ -83,8 +85,10 @@ export const useSplitTestCard: UseSplitTestsCard = ({
 
   const showSnackbar = useSnackbar()
   const handleDeploy = useCallback(() => {
+    setDeploying(true)
     deploySplitTest(project, team, currentSplits)
       .then((res) => {
+        setDeploying(false)
         if (res.ok) {
           setOriginalSplits(currentSplits)
           showSnackbar(
@@ -109,7 +113,8 @@ export const useSplitTestCard: UseSplitTestsCard = ({
           )
         )
       })
-      .catch((e) =>
+      .catch((e) => {
+        setDeploying(false)
         showSnackbar(
           {
             type: 'alert',
@@ -118,11 +123,11 @@ export const useSplitTestCard: UseSplitTestsCard = ({
           },
           10000
         )
-      )
+      })
   }, [currentSplits, project, router.reload, showSnackbar, team])
 
   return [
-    { editingKey, currentSplits, deployable, controllable },
+    { editingKey, currentSplits, deployable, controllable, deploying },
     { handleClose, handleCreate, handleEdit, handleDeploy, formDispatch }
   ]
 }
