@@ -10,7 +10,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async (ctx) => {
     const { user, teams } = await fetchUserAndTeams(ctx)
     return {
       props: {
-        user,
+        ...(user ? { user } : {}),
         teams: teams ?? [],
         projects: [],
         loggedIn
