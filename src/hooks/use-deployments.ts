@@ -5,7 +5,13 @@ import AuthContext from '@/libs/firebase/AuthContext'
 import { useContext } from 'react'
 
 export const useDeployments = (
-  params: { projectId: string; teamId?: string; next?: number },
+  params: {
+    projectId: string
+    teamId?: string
+    next?: number
+    target?: string
+    limit?: number
+  },
   config?: SWRConfiguration
 ): { deployments: Deployments; next?: number } | undefined => {
   const authInfo = useContext(AuthContext)
@@ -32,7 +38,11 @@ const getDeploymentsUrl = (params: {
   projectId: string
   teamId?: string
   next?: number
+  target?: string
+  limit?: number
 }) =>
-  `${ENDPOINTS.deployments}?limit=10&projectId=${params.projectId}${
-    params.teamId ? `&teamId=${params.teamId}` : ''
-  }${params.next ? `&from=${params.next}` : ''}`
+  `${ENDPOINTS.deployments}?limit=${params.limit ?? 10}&projectId=${
+    params.projectId
+  }${params.teamId ? `&teamId=${params.teamId}` : ''}${
+    params.next ? `&from=${params.next}` : ''
+  }${params.target ? `&target=${params.target}` : ''}`

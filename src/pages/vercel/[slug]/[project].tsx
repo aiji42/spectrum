@@ -9,6 +9,7 @@ import {
 } from '@/libs/server-side'
 import { Project, Projects, Splits, Team, Teams, User } from '@/types'
 import { getSplitEnvFromProject } from '@/utils'
+import { PreviewsCard } from '@/components/PreviewsCard'
 
 export const getServerSideProps: GetServerSideProps<Props> = async (ctx) => {
   const { query } = ctx
@@ -78,6 +79,9 @@ const Home: VFC<Props> = (props) => {
       </div>
       <div className="mt-8">
         <SplitTestsCard {...props} />
+      </div>
+      <div className="mt-8">
+        <PreviewsCard {...props} />
       </div>
     </>
   )
