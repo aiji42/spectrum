@@ -1,6 +1,9 @@
-import { VFC, useEffect, useState } from 'react'
-import { Deployment, Deployments, Project, Team, User } from '@/types'
+import { VFC } from 'react'
+import { Deployment, Project, Team, User } from '@/types'
 import { useDeployments } from '@/hooks/use-deployments'
+import dayjs from 'dayjs'
+import relativeTime from 'dayjs/plugin/relativeTime'
+dayjs.extend(relativeTime)
 
 type Props = {
   project: Project
@@ -15,6 +18,9 @@ export const PreviewsCard: VFC<Props> = (props) => {
         <h3 className="text-lg leading-6 font-medium text-gray-900">
           Previews
         </h3>
+        <p className="mt-1 max-w-2xl text-sm text-gray-500">
+          Up to 20 latest preview deployments.
+        </p>
       </div>
       <div className="border-t border-gray-200">
         <DeploymentsPanel {...props} />
@@ -24,53 +30,44 @@ export const PreviewsCard: VFC<Props> = (props) => {
 }
 
 const DeploymentsPanel: VFC<Props> = ({ team, project }) => {
-  const [next, setNext] = useState<undefined | number>()
-  const data = useDeployments({
+  const deployments = useDeployments({
     projectId: project.id,
     teamId: team?.id,
-    next
+    target: 'preview',
+    limit: 20
   })
-  const [deployments, setDeployments] = useState<Deployments>([])
-  useEffect(() => {
-    if (!data?.deployments) return
-    setDeployments((prev) => [...prev, ...data.deployments])
-  }, [data?.deployments])
 
   return (
-    <div className="mt-1 bg-white rounded-md shadow">
-      <div className="pt-2 overflow-scroll overflow-x-hidden h-96">
-        {deployments.map(({ uid, meta, url, state, target }) => (
-          <DeploymentsPanelItem
-            key={uid}
-            branchName={getBranchName(meta)}
-            target={target ?? 'preview'}
-            state={state}
-            host={url}
-          />
-        ))}
-      </div>
-      {data?.next && (
-        <button
-          onClick={() => setNext(data?.next)}
-          className="block w-full cursor-pointer bg-gray-700 hover:bg-gray-800 text-white text-center font-bold py-4"
-        >
-          See More
-        </button>
-      )}
+    <div className="bg-white rounded-md shadow">
+      {deployments?.deployments.map(({ uid, meta, url, state, createdAt }) => (
+        <DeploymentsPanelItem
+          key={uid}
+          branchName={getBranchName(meta)}
+          commitMessage={getCommitMessage(meta)}
+          committer={getCommitter(meta)}
+          state={state}
+          host={url}
+          createdAt={createdAt}
+        />
+      ))}
     </div>
   )
 }
 
 const DeploymentsPanelItem: VFC<{
   branchName: string
+  commitMessage: string
+  committer: string
   state: Deployment['state']
   host: string
-  target: string
-}> = ({ branchName, state, target, host }) => {
+  createdAt: number
+}> = ({ branchName, commitMessage, committer, state, host, createdAt }) => {
   return (
-    <div className="flex items-center px-4 py-3 border-b hover:bg-gray-100 cursor-pointer">
-      <div className="text-gray-400 text-sm">
-        <p className="truncate pb-1">
+    <div className="flex items-center py-3 px-4 sm:px-0 border-b">
+      <div className="text-gray-600 text-sm sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+        <p className="truncate font-bold text-gray-700">{host}</p>
+        <p className="pb-1 sm:ml-4">
+          <p className="truncate">{commitMessage}</p>
           <svg
             viewBox="0 0 24 24"
             width="16"
@@ -90,9 +87,8 @@ const DeploymentsPanelItem: VFC<{
           </svg>
           {branchName}
         </p>
-        <p className="truncate pb-1">
-          <span className="mr-2">{target}</span>
-          <span
+        <p className="pb-1 sm:ml-4">
+          <p
             className={
               state === 'READY'
                 ? 'text-green-600'
@@ -104,9 +100,11 @@ const DeploymentsPanelItem: VFC<{
             }
           >
             {state}
-          </span>
+          </p>
+          <p className="pb-1">
+            {dayjs().to(dayjs(createdAt))} by {committer}
+          </p>
         </p>
-        <p className="truncate text-gray-600 font-bold">{host}</p>
       </div>
     </div>
   )
@@ -116,4 +114,17 @@ const getBranchName = (meta: Record<string, string>): string => {
   const [, branchName] =
     Object.entries(meta).find(([key]) => key.includes('CommitRef')) ?? []
   return branchName ?? ''
+}
+
+const getCommitMessage = (meta: Record<string, string>): string => {
+  const [, msg] =
+    Object.entries(meta).find(([key]) => key.includes('CommitMessage')) ?? []
+  return msg ?? ''
+}
+
+const getCommitter = (meta: Record<string, string>): string => {
+  const [, msg] =
+    Object.entries(meta).find(([key]) => key.includes('CommitAuthorLogin')) ??
+    []
+  return msg ?? ''
 }

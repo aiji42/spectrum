@@ -288,7 +288,8 @@ const DeploymentsPanel: VFC<Props & { onSelected: (host: string) => void }> = ({
   const data = useDeployments({
     projectId: project.id,
     teamId: team?.id,
-    next
+    next,
+    target: 'preview'
   })
   const [deployments, setDeployments] = useState<Deployments>([])
   useEffect(() => {
