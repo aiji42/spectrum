@@ -66,10 +66,10 @@ const DeploymentsPanelItem: VFC<{
   createdAt: number
 }> = ({ branchName, commitMessage, committer, state, host, createdAt }) => {
   return (
-    <div className="flex items-center py-3 px-4 sm:px-0 border-b">
+    <div className="py-3 px-4 sm:px-0 border-b">
       <div className="text-gray-600 text-sm sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-        <p className="truncate font-bold text-gray-700">{host}</p>
-        <p className="pb-1 sm:ml-4">
+        <p className="truncate font-bold text-gray-700 max-w-xs">{host}</p>
+        <p className="pb-1 sm:ml-4  max-w-xs">
           <p className="truncate">{commitMessage}</p>
           <svg
             viewBox="0 0 24 24"
