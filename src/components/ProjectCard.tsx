@@ -1,6 +1,5 @@
 import { useReducer, VFC, Fragment, useEffect } from 'react'
 import { Project, Team, User } from '@/types'
-import dayjs from 'dayjs'
 import { isControllableDeploy } from '@/utils'
 import {
   ExternalLinkIcon,
@@ -10,6 +9,9 @@ import {
 import { Dialog, Transition } from '@headlessui/react'
 import Image from 'next/image'
 import { useProject } from '@/hooks/use-projects'
+import dayjs from 'dayjs'
+import relativeTime from 'dayjs/plugin/relativeTime'
+dayjs.extend(relativeTime)
 
 type Props = {
   project: Project
@@ -27,6 +29,12 @@ export const ProjectCard: VFC<Props> = (props) => {
   useEffect(() => {
     modalDispatch(!isControllableDeploy(props.project))
   }, [props.project])
+  const domains = Array.from(
+    new Set([
+      ...project.alias.map(({ domain }) => domain),
+      ...project.targets.production.alias
+    ])
+  )
 
   return (
     <div className="bg-white shadow-md overflow-hidden sm:rounded-lg">
@@ -70,20 +78,15 @@ export const ProjectCard: VFC<Props> = (props) => {
           <div className="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
             <dt className="text-sm font-medium text-gray-500">Domains</dt>
             <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-              {project.alias.map((alias) => (
-                <p key={alias.domain}>{alias.domain}</p>
-              ))}
-              {project.targets.production.alias.map((alias) => (
-                <p key={alias}>{alias}</p>
+              {domains.map((domain) => (
+                <p key={domain}>{domain}</p>
               ))}
             </dd>
           </div>
           <div className="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
             <dt className="text-sm font-medium text-gray-500">Created</dt>
             <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-              {dayjs(project.targets.production.createdAt).format(
-                'YYYY-MM-DD HH:mm:ss'
-              )}
+              {dayjs().to(dayjs(project.targets.production.createdAt))}
             </dd>
           </div>
           <div className="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">

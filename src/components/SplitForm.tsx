@@ -296,28 +296,24 @@ const DeploymentsPanel: VFC<Props & { onSelected: (host: string) => void }> = ({
     if (!data?.deployments) return
     setDeployments((prev) => [...prev, ...data.deployments])
   }, [data?.deployments])
+  const domains = Array.from(
+    new Set([
+      ...project.alias.map(({ domain }) => domain),
+      ...project.targets.production.alias
+    ])
+  )
 
   return (
     <div className="mt-1 bg-white rounded-md shadow overflow-scroll overflow-x-hidden h-96">
       <div className="pt-2">
-        {project.alias.map((alias) => (
+        {domains.map((domain) => (
           <DeploymentsPanelItem
-            key={alias.domain}
-            onClick={() => onSelected(alias.domain)}
+            key={domain}
+            onClick={() => onSelected(domain)}
             branchName={getBranchName(project.targets.production.meta)}
             target="production"
             state={project.targets.production.readyState}
-            host={alias.domain}
-          />
-        ))}
-        {project.targets.production.alias.map((alias) => (
-          <DeploymentsPanelItem
-            key={alias}
-            onClick={() => onSelected(alias)}
-            branchName={getBranchName(project.targets.production.meta)}
-            target="production"
-            state={project.targets.production.readyState}
-            host={alias}
+            host={domain}
           />
         ))}
         {deployments.map(({ uid, meta, url, state, target }) => (
