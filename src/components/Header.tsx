@@ -1,4 +1,4 @@
-import { Fragment, VFC } from 'react'
+import { Fragment, useContext, useEffect, VFC } from 'react'
 import { Popover, Transition } from '@headlessui/react'
 import {
   ChevronDownIcon,
@@ -15,7 +15,9 @@ import {
 } from '@heroicons/react/outline'
 import { Project, Projects, Teams, User } from '@/types'
 import { isRunningSplitTests } from '@/utils'
-import { Login } from '@/libs/firebase/firebase'
+import { firebaseUser, Login } from '@/libs/firebase/firebase'
+import { useRouter } from 'next/router'
+import AuthContext from '@/libs/firebase/AuthContext'
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(' ')
@@ -38,6 +40,12 @@ export const Header: VFC<Props> = ({
   teams,
   loggedIn
 }) => {
+  const router = useRouter()
+  const firebaseState = useContext(AuthContext)
+  useEffect(() => {
+    if (!user && firebaseState?.user) router.reload()
+  }, [firebaseState?.user, router, user])
+
   return (
     <div className="flex items-center border-b-2 border-gray-100 py-4 justify-start space-x-10">
       <div className="flex-1 justify-start lg:w-0">
