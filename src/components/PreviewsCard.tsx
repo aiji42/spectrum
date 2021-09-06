@@ -30,12 +30,15 @@ export const PreviewsCard: VFC<Props> = (props) => {
 }
 
 const DeploymentsPanel: VFC<Props> = ({ team, project }) => {
-  const deployments = useDeployments({
-    projectId: project.id,
-    teamId: team?.id,
-    target: 'preview',
-    limit: 20
-  })
+  const deployments = useDeployments(
+    {
+      projectId: project.id,
+      teamId: team?.id,
+      target: 'preview',
+      limit: 20
+    },
+    { refreshInterval: 5000 }
+  )
 
   return (
     <div className="bg-white rounded-md shadow">
