@@ -16,8 +16,11 @@ export const config = JSON.parse(
 export const auth = firebase.auth()
 export const Firebase = firebase
 
-export const Login = (): void => {
-  const provider = new firebase.auth.GithubAuthProvider()
+export const Login = (type: 'google' | 'github'): void => {
+  const provider =
+    type === 'github'
+      ? new firebase.auth.GithubAuthProvider()
+      : new firebase.auth.GoogleAuthProvider()
   firebase
     .auth()
     .signInWithPopup(provider)
