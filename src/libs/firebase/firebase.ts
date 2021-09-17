@@ -17,7 +17,7 @@ export const auth = firebase.auth()
 export const Firebase = firebase
 
 export const Login = (): void => {
-  const provider = new firebase.auth.GoogleAuthProvider()
+  const provider = new firebase.auth.GithubAuthProvider()
   firebase
     .auth()
     .signInWithPopup(provider)
