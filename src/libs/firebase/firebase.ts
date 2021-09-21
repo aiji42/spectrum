@@ -5,7 +5,6 @@ import { Dispatch } from 'react'
 import { Action } from './authReducer'
 
 type Unsubscribe = firebase.Unsubscribe
-type User = firebase.User
 
 export const config = JSON.parse(
   process.env.NEXT_PUBLIC_FIREBASE_CONFIG ?? '{}'
@@ -16,11 +15,14 @@ export const config = JSON.parse(
 export const auth = firebase.auth()
 export const Firebase = firebase
 
-export const Login = (): void => {
-  const provider = new firebase.auth.GoogleAuthProvider()
+export const Login = (type: 'google' | 'github'): void => {
+  const provider =
+    type === 'github'
+      ? new firebase.auth.GithubAuthProvider()
+      : new firebase.auth.GoogleAuthProvider()
   firebase
     .auth()
-    .signInWithPopup(provider)
+    .signInWithRedirect(provider)
     .then((result) => {
       window.location.href = '/vercel/_dummy'
       return result
@@ -62,10 +64,6 @@ export const listenAuthState = (dispatch: Dispatch<Action>): Unsubscribe => {
         })
       })
   })
-}
-
-export const firebaseUser = (): User | null => {
-  return firebase.auth().currentUser
 }
 
 export const Logout = (): void => {

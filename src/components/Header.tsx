@@ -1,5 +1,5 @@
-import { Fragment, useContext, useEffect, VFC } from 'react'
-import { Popover, Transition } from '@headlessui/react'
+import { Fragment, useContext, useEffect, useReducer, VFC } from 'react'
+import { Dialog, Popover, Transition } from '@headlessui/react'
 import {
   ChevronDownIcon,
   LightningBoltIcon as LightningBoltIconSolid,
@@ -15,7 +15,11 @@ import {
 } from '@heroicons/react/outline'
 import { Project, Projects, Teams, User } from '@/types'
 import { isRunningSplitTests } from '@/utils'
-import { firebaseUser, Login } from '@/libs/firebase/firebase'
+import { Login } from '@/libs/firebase/firebase'
+import {
+  GoogleLoginButton,
+  GithubLoginButton
+} from 'react-social-login-buttons'
 import { useRouter } from 'next/router'
 import AuthContext from '@/libs/firebase/AuthContext'
 
@@ -40,11 +44,15 @@ export const Header: VFC<Props> = ({
   teams,
   loggedIn
 }) => {
-  const router = useRouter()
-  const firebaseState = useContext(AuthContext)
+  const [openLoginWindow, toggleLoginWindow] = useReducer(
+    (state) => !state,
+    false
+  )
+  const { reload } = useRouter()
+  const firebaseUser = useContext(AuthContext)?.user
   useEffect(() => {
-    if (!user && firebaseState?.user) router.reload()
-  }, [firebaseState?.user, router, user])
+    if (!loggedIn && firebaseUser) reload()
+  }, [loggedIn, reload, firebaseUser])
 
   return (
     <div className="flex items-center border-b-2 border-gray-100 py-4 justify-start space-x-10">
@@ -244,13 +252,83 @@ export const Header: VFC<Props> = ({
         ) : (
           <a
             href="#"
-            onClick={Login}
+            onClick={toggleLoginWindow}
             className="ml-8 whitespace-nowrap inline-flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-green-400 hover:bg-green-500"
           >
             Sign in
           </a>
         )}
       </div>
+      <Transition.Root show={openLoginWindow} as={Fragment}>
+        <Dialog
+          as="div"
+          auto-reopen="true"
+          className="fixed z-10 inset-0 overflow-y-auto"
+          onClose={toggleLoginWindow}
+        >
+          <div className="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+            <Transition.Child
+              as={Fragment}
+              enter="ease-out duration-300"
+              enterFrom="opacity-0"
+              enterTo="opacity-100"
+              leave="ease-in duration-200"
+              leaveFrom="opacity-100"
+              leaveTo="opacity-0"
+            >
+              <Dialog.Overlay className="fixed inset-0 bg-gray-500 bg-opacity-25 transition-opacity" />
+            </Transition.Child>
+
+            {/* This element is to trick the browser into centering the modal contents. */}
+            <span
+              className="hidden sm:inline-block sm:align-middle sm:h-screen"
+              aria-hidden="true"
+            >
+              &#8203;
+            </span>
+            <Transition.Child
+              as={Fragment}
+              enter="ease-out duration-300"
+              enterFrom="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+              enterTo="opacity-100 translate-y-0 sm:scale-100"
+              leave="ease-in duration-200"
+              leaveFrom="opacity-100 translate-y-0 sm:scale-100"
+              leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+            >
+              <div className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:align-middle w-full sm:max-w-sm">
+                <div className="py-8 px-4 sm:px-12">
+                  <div className="text-center p-2">
+                    <Image
+                      src="/logo.svg"
+                      alt="logo"
+                      height={60}
+                      width={60}
+                      quality={100}
+                      priority
+                    />
+                  </div>
+                  <div className="my-4">
+                    <GithubLoginButton
+                      onClick={() => Login('github')}
+                      text="Login with Github"
+                      style={{ padding: 28, fontWeight: 500 }}
+                    />
+                  </div>
+                  {false && (
+                    <div className="my-4">
+                      <GoogleLoginButton
+                        onClick={() => Login('google')}
+                        text="Login with Google"
+                        style={{ padding: 28, fontWeight: 500 }}
+                      />
+                    </div>
+                  )}
+                </div>
+              </div>
+            </Transition.Child>
+          </div>
+        </Dialog>
+      </Transition.Root>
     </div>
   )
 }
