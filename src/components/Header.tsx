@@ -1,4 +1,4 @@
-import { Fragment, useReducer, VFC } from 'react'
+import { Fragment, useContext, useEffect, useReducer, VFC } from 'react'
 import { Dialog, Popover, Transition } from '@headlessui/react'
 import {
   ChevronDownIcon,
@@ -20,6 +20,8 @@ import {
   GoogleLoginButton,
   GithubLoginButton
 } from 'react-social-login-buttons'
+import { useRouter } from 'next/router'
+import AuthContext from '@/libs/firebase/AuthContext'
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(' ')
@@ -46,6 +48,12 @@ export const Header: VFC<Props> = ({
     (state) => !state,
     false
   )
+  const { reload } = useRouter()
+  const firebaseUser = useContext(AuthContext)?.user
+  useEffect(() => {
+    if (!loggedIn && firebaseUser) reload()
+  }, [loggedIn, reload, firebaseUser])
+
   return (
     <div className="flex items-center border-b-2 border-gray-100 py-4 justify-start space-x-10">
       <div className="flex-1 justify-start lg:w-0">
@@ -258,7 +266,7 @@ export const Header: VFC<Props> = ({
           className="fixed z-10 inset-0 overflow-y-auto"
           onClose={toggleLoginWindow}
         >
-          <div className="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+          <div className="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
             <Transition.Child
               as={Fragment}
               enter="ease-out duration-300"
@@ -268,7 +276,7 @@ export const Header: VFC<Props> = ({
               leaveFrom="opacity-100"
               leaveTo="opacity-0"
             >
-              <Dialog.Overlay className="fixed inset-0 bg-gray-300 bg-opacity-50 transition-opacity" />
+              <Dialog.Overlay className="fixed inset-0 bg-gray-500 bg-opacity-25 transition-opacity" />
             </Transition.Child>
 
             {/* This element is to trick the browser into centering the modal contents. */}
@@ -287,17 +295,34 @@ export const Header: VFC<Props> = ({
               leaveFrom="opacity-100 translate-y-0 sm:scale-100"
               leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
             >
-              <div className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-2xl sm:w-full">
-                <div className="py-24 px-4 sm:px-12">
-                  <p className="text-3xl font-bold text-center p-4">
-                    Select Auth Provider
-                  </p>
-                  <div className="my-2">
-                    <GithubLoginButton onClick={() => Login('github')} />
+              <div className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:align-middle w-full sm:max-w-sm">
+                <div className="py-8 px-4 sm:px-12">
+                  <div className="text-center p-2">
+                    <Image
+                      src="/logo.svg"
+                      alt="logo"
+                      height={60}
+                      width={60}
+                      quality={100}
+                      priority
+                    />
                   </div>
-                  <div className="my-2">
-                    <GoogleLoginButton onClick={() => Login('google')} />
+                  <div className="my-4">
+                    <GithubLoginButton
+                      onClick={() => Login('github')}
+                      text="Login with Github"
+                      style={{ padding: 28, fontWeight: 500 }}
+                    />
                   </div>
+                  {false && (
+                    <div className="my-4">
+                      <GoogleLoginButton
+                        onClick={() => Login('google')}
+                        text="Login with Google"
+                        style={{ padding: 28, fontWeight: 500 }}
+                      />
+                    </div>
+                  )}
                 </div>
               </div>
             </Transition.Child>
